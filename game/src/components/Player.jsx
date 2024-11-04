@@ -165,7 +165,7 @@ const Player = () => {
             const newPlayers = { ...players, participants: players.participants.map(p => ({ ...p })) }
 
             const newFrame = (players.participants[currentPlayerInd].currentFrame + 1) % playerMoves.length;
-            
+
             newPlayers.participants[currentPlayerInd].dx = 1;
             newPlayers.participants[currentPlayerInd].currentFrame = newFrame;
             return newPlayers
@@ -203,7 +203,7 @@ const Player = () => {
             newPlayers.participants[currentPlayerInd].currentFrame = newFrame;
             return newPlayers
           })
-      
+
           currentPlayerNewPosition.left += SPEED;
           break;
       }
@@ -219,8 +219,17 @@ const Player = () => {
           left: currentPlayerNewPosition.left,
         })
         ) {
-          currentPlayerNewPosition.top = currentPlayer.top;
-          currentPlayerNewPosition.left = currentPlayer.left;
+          console.log("here")
+
+          setPlayers(players => {
+            const currentPlayerInd = players.participants.findIndex(p => {
+              return p.playerId === currentPlayer.playerId
+            })
+            currentPlayerNewPosition.top = players.participants[currentPlayerInd].top;
+            currentPlayerNewPosition.left = players.participants[currentPlayerInd].left;
+            return players
+          })
+
         }
 
 
@@ -238,7 +247,7 @@ const Player = () => {
           return newPlayers
         })
 
-        
+
 
       }
     };
@@ -249,10 +258,26 @@ const Player = () => {
     };
   }, []);
 
+  useEffect(() => {
+    setCurrentPlayer(() => {
+      console.log(players)
+      const currentPlayer = players.participants.filter(({ playerId: pid }) =>
+        pid === playerId
+      )
+      console.log(currentPlayer)
+      return currentPlayer[0]
+    })
+  }, [players])
+
+
+  console.log(players)
+  const remPlayers = players.participants.filter(({ playerId: pid }) => pid != playerId)
+  console.log(remPlayers)
 
   return (
     <>
-      {players.participants.map((player, ind) => (
+      {<EachPlayer player={currentPlayer} />}
+      {remPlayers.map((player, ind) => (
         <EachPlayer key={ind} player={player} />
       ))}
     </>
@@ -260,7 +285,7 @@ const Player = () => {
 };
 
 const EachPlayer = ({ player }) => {
-
+  if (!player) return <></>
 
   return (<div
 
