@@ -9,7 +9,7 @@ const useSocket = () => {
     const setIsRoomFull = useSetRecoilState(isRoomFullAtom)
     useEffect(() => {
         if (!socket) {
-            socket = io("localhost:3000");
+            socket = io("https://midblade.onrender.com");
         }
     }, [socket])
 
