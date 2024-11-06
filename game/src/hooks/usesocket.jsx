@@ -42,11 +42,15 @@ const useSocket = () => {
         }
     }
 
-    const getRoomData = (setPlayers, setCurrentPlayer, currentPlayer) => {
+    const getRoomData = (setPlayers, setCurrentPlayer, currentPlayer, setDoesRoomExist) => {
 
         if (socket) {
             socket.on("get-room-data", roomData => {
                 console.log("getting room data")
+                if(!roomData){
+                    setDoesRoomExist(false);
+                    return;
+                }
                 // console.log(roomData)
                 // console.log("socket.id=", socket.id);
                 // console.log("roomData.playerId=", roomData.playerId)
@@ -61,6 +65,7 @@ const useSocket = () => {
 
                     setCurrentPlayer(currentPlayerInitial[0])
                 }
+
 
             })
         }
