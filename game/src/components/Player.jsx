@@ -226,6 +226,7 @@ const EachPlayer = ({ player }) => {
   >
     {/* <PlayerBar val={player.healthBar} type="health" />
     <PlayerBar val={player.manaBar} type="mana" /> */}
+    <p>{(player.playerName.slice(0,5)) + "..."}</p>
     <img
       className={`${player.dx === -1 ? "invert" : ""}`}
       src={playerMoves[player.currentFrame]}

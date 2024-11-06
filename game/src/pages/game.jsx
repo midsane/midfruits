@@ -16,10 +16,15 @@ import { AnimatePresence, motion } from "framer-motion";
 
 export default function GamePage() {
     const [players, setPlayers] = useRecoilState(playersAtom)
-    const setCurrentPlayer = useSetRecoilState(currentPlayerAtom)
+    const [currentPlayer, setCurrentPlayer] = useRecoilState(currentPlayerAtom)
     const [username, setUsername] = useRecoilState(usernameAtom)
     const isRoomFull = useRecoilValue(isRoomFullAtom)
-    const { getRoomData, connectSocket,checkRoomAvailibility , joinRoom } = useSocket()
+    const { 
+        getRoomData, 
+        connectSocket,
+        checkRoomAvailibility , 
+        joinRoom } = useSocket()
+
     const [askUser, setAskUser] = useState(false)
     const usernameRef = useRef()
     const {gameId} = useParams()
@@ -51,7 +56,7 @@ export default function GamePage() {
         
             checkRoomAvailibility();
             console.log("calling getroomdata from game.jsx")
-            getRoomData(setPlayers, setCurrentPlayer)
+            getRoomData(setPlayers, setCurrentPlayer, currentPlayer)
             console.log(askUser)
 
         }

@@ -29,12 +29,12 @@ const useSocket = () => {
     }
 
     const checkRoomAvailibility = () => {
-        
+
         socket.on("room-is-full", isRoomFull => {
             console.log("seconddasf")
             setIsRoomFull(isRoomFull)
         })
-    }    
+    }
 
     const createRoom = (roomName, roomLimit, username) => {
         if (socket) {
@@ -42,7 +42,7 @@ const useSocket = () => {
         }
     }
 
-    const getRoomData = (setPlayers, setCurrentPlayer) => {
+    const getRoomData = (setPlayers, setCurrentPlayer, currentPlayer) => {
 
         if (socket) {
             socket.on("get-room-data", roomData => {
@@ -50,15 +50,17 @@ const useSocket = () => {
                 // console.log(roomData)
                 // console.log("socket.id=", socket.id);
                 // console.log("roomData.playerId=", roomData.playerId)
-                
+
                 // if (roomData.playerId === socket.id) return;
                 setPlayers(roomData)
 
-                const currentPlayer = roomData.participants.filter(({ playerId }) => {
-                    return playerId === socket.id
-                })
+                if (!currentPlayer) {
+                    const currentPlayerInitial = roomData.participants.filter(({ playerId }) => {
+                        return playerId === socket.id
+                    })
 
-                setCurrentPlayer(currentPlayer[0])
+                    setCurrentPlayer(currentPlayerInitial[0])
+                }
 
             })
         }
@@ -71,7 +73,7 @@ const useSocket = () => {
         }
     }
 
-    return { connectSocket,checkRoomAvailibility, createRoom, getRoomData, sendRoomData, joinRoom }
+    return { connectSocket, checkRoomAvailibility, createRoom, getRoomData, sendRoomData, joinRoom }
 
 }
 
