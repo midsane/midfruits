@@ -7,7 +7,7 @@ const ManaBar = ({ mana }) => {
                 className="h-full bg-purple-400 rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: `${mana}%` }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.2 }}
             />
         </div>
     );
