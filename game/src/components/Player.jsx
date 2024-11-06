@@ -65,7 +65,7 @@ const Player = () => {
 
     // }
 
-    const currentPlayerNewPosition = { ...currentPlayer }
+    // const currentPlayerNewPosition = { ...currentPlayer }
 
 
     // const checkCollisionWithOtherPlayers = (p1, p2) => {
@@ -75,40 +75,44 @@ const Player = () => {
     //   else return false;
     // };
 
-    const checkCollisionWithEnemy = (p) => {
-      return ENEMY_COORDINATES.some((obs) => {
-        const diffTop = Math.abs(p.top - obs.top);
-        const diffLeft = Math.abs(p.left - obs.left);
-        return diffTop < 5 && diffLeft < 5;
-      });
-    }
+    // const checkCollisionWithEnemy = (p) => {
+    //   return ENEMY_COORDINATES.some((obs) => {
+    //     const diffTop = Math.abs(p.top - obs.top);
+    //     const diffLeft = Math.abs(p.left - obs.left);
+    //     return diffTop < 5 && diffLeft < 5;
+    //   });
+    // }
 
-    const checkCollisonWithObstacles = (p) => {
-      return OBSTACLE_POSITION.some((obs) => {
-        const diffTop = Math.abs(p.top - obs.top);
-        const diffLeft = Math.abs(p.left - obs.left);
+    // const checkCollisonWithObstacles = (p) => {
+    //   return OBSTACLE_POSITION.some((obs) => {
+    //     const diffTop = Math.abs(p.top - obs.top);
+    //     const diffLeft = Math.abs(p.left - obs.left);
 
-        return diffTop < 5 && diffLeft < 5;
-      });
-    };
+    //     return diffTop < 5 && diffLeft < 5;
+    //   });
+    // };
 
     // const checkCollisionWithMagic = () => {
-
+    //   console.log("inside collison checker for magic")
     //   magicItem.forEach((magicCoor) => {
     //     const magicTop = magicCoor.top;
     //     const magicLeft = magicCoor.left;
-    //     const collidingPlayer = players.find((player) => {
+    //     const collidingPlayer = players.participants.find((player) => {
     //       const playerTop = player.top;
     //       const playerLeft = player.left;
+    //       console.log(player.top)
+    //       console.log(player.left)
+    //       console.log(magicTop)
+    //       console.log(magicLeft)
     //       const diffTop = Math.abs(magicTop - playerTop);
     //       const diffLeft = Math.abs(magicLeft - playerLeft);
-    //       return diffTop < 7 && diffLeft < 7;
+    //       return diffTop < 10 && diffLeft < 10;
     //     });
 
     //     if (collidingPlayer) {
 
     //       setPlayers((players) => {
-    //         const newPlayers = players.map((player) => {
+    //         const newPlayers = players.participants.map((player) => {
     //           if (player.playerId === collidingPlayer.playerId) {
     //             if (magicCoor.type === "mana") {
 
@@ -123,7 +127,10 @@ const Player = () => {
     //           return player;
     //         })
 
-    //         return newPlayers
+    //         const newState = {...players, participants: players.participants.map(p => ({...p}))}
+
+    //         newState.participants = newPlayers
+    //         return newState
     //       }
     //       );
 
@@ -135,121 +142,55 @@ const Player = () => {
     //   })
     // }
 
+
+
+    const checkCollisionWithObjects = (currentPlayerState) => {
+      const collding = OBSTACLE_POSITION.some(obs => {
+        const topDiff = Math.abs(obs.top - currentPlayerState.top);
+        const leftDiff = Math.abs(obs.left - currentPlayerState.left);
+        return topDiff < 7 && leftDiff < 7 ;
+      })
+      
+      return collding
+    }
+
     const inputFnc = (event) => {
+      setCurrentPlayer(prev => {
+        const currentPlayerState = {...prev}
+        switch (event.key) {
 
-      switch (event.key) {
+          case "ArrowUp":
+            currentPlayerState.top--;
+            break;
 
-        case "ArrowUp":
-          setPlayers((players) => {
+          case "ArrowLeft":
+            currentPlayerState.left--;
+            currentPlayerState.dx = -1;
+            break;
 
-            const currentPlayerInd = players.participants.findIndex(p => {
-              return p.playerId === currentPlayer.playerId
-            })
-            const newPlayers = { ...players, participants: players.participants.map(p => ({ ...p })) }
+          case "ArrowDown":
+            currentPlayerState.top++;
+            break;
 
-            const newFrame = (players.participants[currentPlayerInd].currentFrame + 1) % playerMoves.length;
+          case "ArrowRight":
+            currentPlayerState.left++;
+            currentPlayerState.dx = 1;
+            break;
 
-            newPlayers.participants[currentPlayerInd].currentFrame = newFrame;
-            return newPlayers
-          })
-
-          currentPlayerNewPosition.top -= SPEED;
-          break;
-
-        case "ArrowLeft":
-          setPlayers((players) => {
-
-            const currentPlayerInd = players.participants.findIndex(p => {
-              return p.playerId === currentPlayer.playerId
-            })
-            const newPlayers = { ...players, participants: players.participants.map(p => ({ ...p })) }
-
-            const newFrame = (players.participants[currentPlayerInd].currentFrame + 1) % playerMoves.length;
-
-            newPlayers.participants[currentPlayerInd].dx = 1;
-            newPlayers.participants[currentPlayerInd].currentFrame = newFrame;
-            return newPlayers
-          })
-          currentPlayerNewPosition.left -= SPEED;
-          break;
-
-        case "ArrowDown":
-          setPlayers((players) => {
-
-            const currentPlayerInd = players.participants.findIndex(p => {
-              return p.playerId === currentPlayer.playerId
-            })
-            const newPlayers = { ...players, participants: players.participants.map(p => ({ ...p })) }
-
-            const newFrame = (players.participants[currentPlayerInd].currentFrame + 1) % playerMoves.length;
-
-            newPlayers.participants[currentPlayerInd].currentFrame = newFrame;
-            return newPlayers
-          })
-          currentPlayerNewPosition.top += SPEED;
-          break;
-
-        case "ArrowRight":
-          setPlayers((players) => {
-
-            const currentPlayerInd = players.participants.findIndex(p => {
-              return p.playerId === currentPlayer.playerId
-            })
-            const newPlayers = { ...players, participants: players.participants.map(p => ({ ...p })) }
-
-            const newFrame = (players.participants[currentPlayerInd].currentFrame + 1) % playerMoves.length;
-
-            newPlayers.participants[currentPlayerInd].dx = -1;
-            newPlayers.participants[currentPlayerInd].currentFrame = newFrame;
-            return newPlayers
-          })
-
-          currentPlayerNewPosition.left += SPEED;
-          break;
-      }
-
-      // checkCollisionWithMagic();
-
-      if (null)
-        return;
-      else {
-
-        if (checkCollisonWithObstacles({
-          top: currentPlayerNewPosition.top,
-          left: currentPlayerNewPosition.left,
-        })
-        ) {
-          console.log("here")
-
-          setPlayers(players => {
-            const currentPlayerInd = players.participants.findIndex(p => {
-              return p.playerId === currentPlayer.playerId
-            })
-            currentPlayerNewPosition.top = players.participants[currentPlayerInd].top;
-            currentPlayerNewPosition.left = players.participants[currentPlayerInd].left;
-            return players
-          })
-
+          default: return prev;
         }
 
+        currentPlayerState.currentFrame = (currentPlayerState.currentFrame + 1) % playerMoves.length
 
+        if(checkCollisionWithObjects(currentPlayerState)) {
+          sendRoomData(players, currentPlayerState, activeRoom)
+          return prev
+        }
+        sendRoomData(players, currentPlayerState, activeRoom)
+        return currentPlayerState
+      })
+    
 
-        setPlayers((players) => {
-
-          const currentPlayerInd = players.participants.findIndex(p => {
-            return p.playerId === currentPlayer.playerId
-          })
-          const newPlayers = { ...players, participants: players.participants.map(p => ({ ...p })) }
-
-          newPlayers.participants[currentPlayerInd].top = currentPlayerNewPosition.top
-          newPlayers.participants[currentPlayerInd].left = currentPlayerNewPosition.left
-          sendRoomData(newPlayers, activeRoom)
-          return newPlayers
-        })
-
-
-
-      }
     };
 
     document.addEventListener("keydown", inputFnc);
@@ -258,30 +199,21 @@ const Player = () => {
     };
   }, []);
 
-  useEffect(() => {
-    setCurrentPlayer(() => {
-      console.log(players)
-      const currentPlayer = players.participants.filter(({ playerId: pid }) =>
-        pid === playerId
-      )
-      console.log(currentPlayer)
-      return currentPlayer[0]
-    })
-  }, [players])
+  
+  const remPlayers = players.participants.filter(({playerId: pid}) => {
+    return pid !== playerId
+  })
 
-
-  console.log(players)
-  const remPlayers = players.participants.filter(({ playerId: pid }) => pid != playerId)
   console.log(remPlayers)
-
+  console.log(currentPlayer)
+  
   return (
     <>
-      {<EachPlayer player={currentPlayer} />}
-      {remPlayers.map((player, ind) => (
-        <EachPlayer key={ind} player={player} />
-      ))}
+      {remPlayers.map((p, i) => <EachPlayer player={p} key={i} />)}
+      <EachPlayer player={currentPlayer} />
     </>
   );
+
 };
 
 const EachPlayer = ({ player }) => {
@@ -292,10 +224,10 @@ const EachPlayer = ({ player }) => {
     style={{ top: `${player.top}%`, left: `${player.left}%` }}
     className="image-container"
   >
-    <PlayerBar val={player.healthBar} type="health" />
-    <PlayerBar val={player.manaBar} type="mana" />
+    {/* <PlayerBar val={player.healthBar} type="health" />
+    <PlayerBar val={player.manaBar} type="mana" /> */}
     <img
-      className={`${player.dx === 1 ? "invert" : ""}`}
+      className={`${player.dx === -1 ? "invert" : ""}`}
       src={playerMoves[player.currentFrame]}
       alt="player"
     />

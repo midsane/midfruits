@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { CrossIcon, User, CirclePlus, PackagePlus, PlusCircle, MinusCircle } from "lucide-react"
+import { UtensilsCrossed, User, CirclePlus, PackagePlus, PlusCircle, MinusCircle, ForkKnifeCrossed, Cross, CrossIcon } from "lucide-react"
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { activeRoomAtom, usernameAtom } from "../store/atoms";
 import { useNavigate } from "react-router";
@@ -23,8 +23,8 @@ export const HomePage = () => {
         if (text === "") return
         console.log("button  1 clicked")
         setText("")
-        animate(".button", { top: "50%", scale: "20", zIndex: "10" }, {
-            duration: 0.3,
+        animate(".button", { top: "0%", zIndex: "10",width: "200vw", height: "200vh" }, {
+            duration: 0.2,
             ease: "linear",
             type: "spring"
         });
@@ -33,47 +33,52 @@ export const HomePage = () => {
     const handleClose = () => {
         console.log("button  2 clicked")
         setText("Play Now!")
-        animate(".button", { top: "70%", scale: "1", zIndex: "0" }, {
-            duration: 0.5,
+        animate(".button", { top: "70%", zIndex: "0", width: "fit-content", height: "fit-content" }, {
+            duration: 0.2,
             ease: "linear",
             type: "spring",
         });
     }
     console.log(text)
 
-    return (<div ref={scope} >
-        <div
-            onClick={handleAnimateInput}
-            style={{ position: 'fixed', left: '50%', top: '70%', transform: 'translateX(-50%)' }}
-            className="pixelify-sans button cursor-pointer bg-pink-300 rounded-full py-5 w-fit px-10 hover:scale-105 active:scale-90 backdrop-blur-md transition-all duration-300"
-        >
-            {text}
+    return (
+        <>
+            {text === "" && <motion.div
+                initial={{ transform: "rotate(345deg" }}
+                animate={{ transform: "rotate(-45deg" }}
+                transition={{ duration: 1, type: "spring" }}
+                onClick={handleClose}
+                className=" z-[200] top-10 right-10 fixed :scale-110 cursor-pointer active:scale-95 " >
+                <CrossIcon size={50}/>
+            </motion.div>}
+            <div ref={scope} >
 
-            {text === "" && <AnimatePresence>
-                <motion.div
-
+                <div
+                    onClick={handleAnimateInput}
+                    style={{ position: 'fixed', left: '50%', top: '70%', transform: 'translateX(-50%)' }}
+                    className="pixelify-sans button cursor-pointer bg-pink-300 rounded-full py-5 w-fit px-10 hover:scale-105 active:scale-90 backdrop-blur-md transition-all duration-300"
                 >
-                    <h6 className="fixed text-amber-300 title2 text-[0.4rem] top-[5%] left-1/2 translate-x-[-50%]" >MidBlade</h6>
-                    <PlayGame />
+                    {text}
 
-                    {text === "" && <motion.div
-                        initial={{ transform: "rotate(345deg" }}
-                        animate={{ transform: "rotate(-45deg" }}
-                        transition={{ duration: 1, type: "spring" }}
-                        onClick={handleClose}
-                        className="absolute top-3 right-6 hover:scale-110 cursor-pointer active:scale-95 " >
-                        <CrossIcon size={2} />
-                    </motion.div>}
-                </motion.div></AnimatePresence>}
-        </div>
-    </div>
+                    {text === "" && <AnimatePresence>
+                        <motion.div
+
+                        >
+                            <h6 className="fixed text-amber-300 title2 text-9xl top-[5%] left-1/2 translate-x-[-50%]" >MidBlade</h6>
+                            <PlayGame />
+
+
+                        </motion.div></AnimatePresence>}
+                </div>
+            </div>
+        </>
 
     );
 };
 
 const PlayGame = () => {
     return (<div
-        className="flex justify-center items-center gap-[0.1rem] text-[0.1rem] flex-col pixelify-sans bg-yellow-200 w-10 h-6 rounded-sm fixed top-1/4 left-1/2 translate-x-[-50%]" >
+        className="flex justify-center items-center gap-10 text-md flex-col pixelify-sans  bg-yellow-200 w-fit h-fit px-20 py-14 rounded-lg fixed top-52 left-1/2 translate-x-[-50%]" >
 
         {["Play Solo", "Join a Room", "Create Room"].map((content, ind) => <Button content={content} key={ind} />)}
 
@@ -95,14 +100,14 @@ const Button = ({ content }) => {
 
     switch (content) {
         case "Play Solo":
-            ButtonSvg = <User size={2} />
+            ButtonSvg = <User size={30} />
             break;
         case "Join a Room":
-            ButtonSvg = <CirclePlus size={2} />
+            ButtonSvg = <CirclePlus size={30} />
             break;
 
         case "Create Room":
-            ButtonSvg = <PackagePlus size={2} />
+            ButtonSvg = <PackagePlus size={30} />
     }
 
     const username = useRecoilValue(usernameAtom)
@@ -153,24 +158,29 @@ const Button = ({ content }) => {
             });
     }
 
-    return (<div className="flex gap-[0.125rem] justify-center items-center" >
+    return (<div className="flex gap-10 justify-center items-center" >
         {ButtonSvg}
-        <button onClick={() => handleBtn(content)} className="bg-pink-300 px-1 active:scale-95 hover:scale-105 w-fit min-w-5 duration-75 ease-linear h-fit py-[1px] rounded-full" >{content}</button>
+        <button onClick={() => handleBtn(content)} className="bg-pink-300 px-10 active:scale-95 hover:scale-105 w-52 duration-75 ease-linear h-fit py-4 rounded-full" >{content}</button>
         <AnimatePresence>
             {showModal && <>
-                <div
-                    className="flex w-fit h-fit rounded-sm flex-col gap-[2px] fixed z-[100] bg-pink-200 py-[2px] px-[3px] top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] " >
+                <motion.div
+                    initial={{ opacity: 0, }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex w-fit h-fit rounded-lg flex-col  fixed z-[100] text-lg gap-6 bg-pink-200 py-6 px-14 top-24 left-1/2 translate-x-[-50%] translate-y-[-50%] " >
                     <h2 >Create a Room!</h2>
                     <label htmlFor="room-name" >Room name:</label>
-                    <input ref={roomnameRef} id="room-name" className="py-[1px]
-                px-[1px] rounded-[2px]
+                    <input ref={roomnameRef} id="room-name" className="py-2
+                px-4 rounded-lg
                 outline-none"  placeholder="room-name" />
                     <label htmlFor="room-limit">{`Room limit: ${roomLimit}`} </label>
 
-                    <div className="flex justify-between items-center h-1 w-full" >
+                    <div className="flex flex-col justify-center items-start gap-4" >
                         <PlayerBar type={"roomlimit"} val={(roomLimit) / 4 * 100} />
-                        <div onClick={() => changeRoomLimit("minus")} className="cursor-pointer active:scale-95" ><MinusCircle size={2} /></div>
-                        <div onClick={() => changeRoomLimit("plus")} className="active:scale-95  cursor-pointer" ><PlusCircle size={2} /></div>
+                        <div className="flex gap-2" >
+                            <div onClick={() => changeRoomLimit("minus")} className="cursor-pointer active:scale-95" ><MinusCircle size={30} /></div>
+                            <div onClick={() => changeRoomLimit("plus")} className="active:scale-95  cursor-pointer" ><PlusCircle size={30} /></div>
+                        </div>
 
                     </div>
                     {roomLink === "" ? <ModalButton handleClick={handleClickRoomCreation}
@@ -180,9 +190,13 @@ const Button = ({ content }) => {
                         <ModalButton handleClick={() => copyToClipboard("http://localhost:5173/room/" + roomnameRef.current.value)} content="Invite Friends" />
                     </div>
                     }
-                </div>
-                <div className="fixed w-screen h-screen backdrop-blur-3xl z-[90]" >
-                </div>
+                </motion.div>
+                <motion.div 
+                initial={{opacity: 0, y: -20}}
+                animate={{opacity:1, y: 0}}
+                exit={{opacity: 0, y: 20}}
+                className="fixed w-screen h-[200vh]  backdrop-blur-3xl z-[90]" >
+                </motion.div>
             </>}
         </AnimatePresence>
     </div>)
@@ -192,5 +206,5 @@ const Button = ({ content }) => {
 const ModalButton = ({ content, handleClick }) => {
     return (<button
         onClick={handleClick}
-        className="bg-amber-200 rounded flex justify-center items-center outline-none active:scale-95" ><p className="mt-[1px]" >{content}</p></button>)
+        className="bg-amber-200 p-2  hover:scale-105 rounded flex justify-center items-center outline-none active:scale-95" ><p className="mt-1" >{content}</p></button>)
 }

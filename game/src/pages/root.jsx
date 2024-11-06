@@ -3,12 +3,13 @@ import { Outlet, useNavigate } from "react-router";
 import { useSocket } from "../hooks/usesocket";
 import { useEffect, useRef } from "react";
 import { Title } from "../components/title";
-import { usernameAtom } from "../store/atoms";
-import { useRecoilState } from "recoil";
+import { isRoomFullAtom, usernameAtom } from "../store/atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
 export const Root = ({ children }) => {
     const [username, setUsername] = useRecoilState(usernameAtom)
     const navigate = useNavigate()
     const usernameRef = useRef()
+    const setIsRoomFull = useSetRecoilState(isRoomFullAtom)
     const variants = {
         initial: {
             backgroundPosition: "0 50%",
@@ -21,6 +22,8 @@ export const Root = ({ children }) => {
     const { connectSocket } = useSocket()
     useEffect(() => {
         connectSocket();
+        setUsername("")
+        setIsRoomFull(false)
     }, [])
 
     const handleClick = () => {
@@ -55,7 +58,7 @@ export const Root = ({ children }) => {
             }}>
             <Title />
             <AnimatePresence>
-                {username === "" && <motion.div
+                {username === ""  && <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0, }}

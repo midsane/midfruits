@@ -42,18 +42,18 @@ let allRoomData = [];
 const initiaPlayerPosition = [
   {
     top: 10,
-    left: 90,
+    left: 80,
   },
   {
     top: 40,
-    left: 90,
+    left: 80,
   },
   {
     top: 20,
     left: 20,
   },
   {
-    top: 20,
+    top: 60,
     left: 20,
   },
 ];
@@ -76,13 +76,45 @@ const randomPosition = () => {
 io.on("connection", (socket) => {
   console.log("a new client got connected to the server ");
   console.log(allRoomData)
-  socket.on("send-room-data", ({ roomData, roomName }) => {
-    allRoomData[roomName] = roomData;
-    console.log(allRoomData[roomName]);
-    io.to(roomName).emit("get-room-data", allRoomData[roomName]);
+  socket.on("send-room-data", ({ currentPlayer, roomName }) => {
+    console.log("inside send-room-data")
+    if(!allRoomData[roomName]) return
+    if(!currentPlayer) return;
+    const currentPlayerInd = allRoomData[roomName].participants.findIndex(p => {
+      return p.playerId === currentPlayer.playerId
+    })
+
+    allRoomData[roomName].participants[currentPlayerInd] = currentPlayer
+    console.log(allRoomData[roomName])
+    socket.to(roomName).emit("get-room-data", allRoomData[roomName]);
   });
 
+  socket.on("get-player-data", (players) => {
+    console.log(players)
+  })
+
   socket.on("join-room", ({ roomName, username }) => {
+    const roomLimit = allRoomData[roomName]?.roomLimit;
+    
+    console.log("inside join room")
+    console.log(allRoomData[roomName])
+
+    if(!roomLimit){
+      socket.emit("room-is-full", true)
+      console.log("!roomlimit")
+      return
+    }
+    if(allRoomData[roomName]?.participants.length === roomLimit){
+      socket.emit("room-is-full", true)
+      console.log("room full")
+      return
+    }
+
+    const isHeAlreadyAParticipant = allRoomData[roomName].participants.find(p => p.playerId === socket.id)
+
+    console.log(isHeAlreadyAParticipant)
+    
+    
     const randomIndex = Math.floor(Math.random() * initiaPlayerPosition.length);
     const top = initiaPlayerPosition[randomIndex].top;
     const left = initiaPlayerPosition[randomIndex].left;
@@ -105,6 +137,7 @@ io.on("connection", (socket) => {
     console.log("user is indeed joining room, now emitting on get-room-dasta ");
 
     io.in(roomName).emit("get-room-data", allRoomData[roomName]);
+
   });
 
   socket.on("create-room", ({ roomName, roomLimit, hostname }) => {
@@ -125,7 +158,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", ()=> {
     console.log("socket got disconnected")
-    console.log(socket)
+    
    const rooms = Array.from(socket.rooms);
     console.log("room in which disconnected socxketr was", rooms)
     rooms.forEach((room) => {
