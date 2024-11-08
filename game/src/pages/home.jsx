@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { User, CirclePlus, PackagePlus, PlusCircle, MinusCircle, CrossIcon, Captions, Link } from "lucide-react"
-import { useRecoilSnapshot, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {  useRecoilValue, useSetRecoilState } from "recoil";
 import { activeRoomAtom, usernameAtom } from "../store/atoms";
 import { useNavigate } from "react-router";
 import { useSocket } from "../hooks/usesocket";
@@ -93,7 +93,9 @@ const Button = ({ content }) => {
     let ButtonSvg = <></>
     const [showModal, setShowModal] = useState("")
     const navigate = useNavigate()
-    const { createRoom } = useSocket()
+    const {createRoom} = useSocket()
+    
+    
     const handleBtnBro = (content) => {
         console.log("inside handleBtn")
         switch (content) {

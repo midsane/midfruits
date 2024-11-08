@@ -13,7 +13,7 @@ const PlayerBar = ({ val, type }) => {
             barColor = "bg-green-500"
     }
     return (
-        <div className={`w-full ${type === "roomlimit" ? "h-8 border border-black" : "h-2"} my-1 bg-gray-300 rounded-full overflow-hidden`}>
+        <div className={`w-full ${type === "roomlimit" ? "h-8 border border-black" : "h-8"} my-1 bg-gray-300 rounded-full overflow-hidden`}>
             <motion.div
                 className={`h-full border  rounded-full ${barColor}`}
                 initial={{ width: 0 }}

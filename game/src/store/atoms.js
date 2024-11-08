@@ -42,10 +42,13 @@ const socketIdAtom = atom({
   default: null
 })
 
-const isRoomFullAtom = atom({
+const isRoomInvalidAtom = atom({
   key: "isRoomFullAtom",
-  default: false
-})
+  default: null,
+});
+
+
+
 
 //  const [enemies, setEnemies] = useState([]);
 
@@ -58,5 +61,5 @@ export {
   currentPlayerAtom,
   activeRoomAtom,
   socketIdAtom,
-  isRoomFullAtom
+  isRoomInvalidAtom
 };

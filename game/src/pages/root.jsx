@@ -3,27 +3,20 @@ import { Outlet, useNavigate } from "react-router";
 import { useSocket } from "../hooks/usesocket";
 import { useEffect, useRef } from "react";
 import { Title } from "../components/title";
-import { isRoomFullAtom, usernameAtom } from "../store/atoms";
+import { isRoomInvalidAtom, usernameAtom } from "../store/atoms";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import { Background } from "../components/Background";
 export const Root = ({ children }) => {
     const [username, setUsername] = useRecoilState(usernameAtom)
     const navigate = useNavigate()
     const usernameRef = useRef()
-    const setIsRoomFull = useSetRecoilState(isRoomFullAtom)
-    const variants = {
-        initial: {
-            backgroundPosition: "0 50%",
-        },
-        animate: {
-            backgroundPosition: ["0, 50%", "100% 50%", "0 50%"],
-        },
-    };
-
+    const setIsRoomInvalid = useSetRecoilState(isRoomInvalidAtom)
+  
     const { connectSocket } = useSocket()
     useEffect(() => {
         connectSocket();
         setUsername("")
-        setIsRoomFull(false)
+        setIsRoomInvalid(null)
     }, [])
 
     const handleClick = () => {
@@ -40,23 +33,8 @@ export const Root = ({ children }) => {
 
     const painSound = new Audio("/assets/deadpoolsound.mp3")
 
-    return (<div className="w-screen h-screen min-h-screen" >
-        <motion.div
-            initial="initial"
-            animate="animate"
-            variants={variants}
-            transition={{
-                duration: 5,
-                repeat: Infinity,
-                repeatType: "reverse",
-            }}
-            className="flex flex-1 w-full h-full min-h-[6rem] dark:bg-dot-white/[0.2] bg-dot-black/[0.2] flex-col space-y-2"
-            style={{
-                background:
-                    "linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)",
-                backgroundSize: "400% 400%",
-            }}>
-            <Title />
+    return (<Background>
+         <Title />
             <AnimatePresence>
                 {username === ""  && <motion.div
                     initial={{ opacity: 0 }}
@@ -73,8 +51,7 @@ export const Root = ({ children }) => {
                     </dialog></motion.div>}
             </AnimatePresence>
             <Outlet>{children}</Outlet>
-        </motion.div>
-    </div>
+    </Background>
 
     );
 }

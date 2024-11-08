@@ -1,15 +1,19 @@
 import { useEffect } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { constSelector, useSetRecoilState } from "recoil";
 import { io } from "socket.io-client";
-import { isRoomFullAtom, socketIdAtom } from "../store/atoms";
+import { isRoomInvalidAtom, playersAtom, socketIdAtom } from "../store/atoms";
+
 
 let socket = null;
 const useSocket = () => {
     const setSocketId = useSetRecoilState(socketIdAtom)
-    const setIsRoomFull = useSetRecoilState(isRoomFullAtom)
+    const setIsRoomInvalid = useSetRecoilState(isRoomInvalidAtom)
+    const setPlayers = useSetRecoilState(playersAtom)
+    
     useEffect(() => {
+      
         if (!socket) {
-            socket = io("https://midblade.onrender.com");
+            socket = io("localhost:3000");
         }
     }, [socket])
 
@@ -28,12 +32,32 @@ const useSocket = () => {
         socket.emit("join-room", { roomName, username })
     }
 
-    const checkRoomAvailibility = () => {
-
-        socket.on("room-is-full", isRoomFull => {
-            console.log("seconddasf")
-            setIsRoomFull(isRoomFull)
+    const startGame = (roomName) => {
+        socket.emit("start-game", roomName)
+        socket.on("start-game-response", data => {
+            console.log(data)
+            if(data.status === 200){
+                setPlayers(data.players)
+                console.log(data.players)
+            }
         })
+    }
+    
+    const checkRoomAvailibility = () => {
+        
+        socket.on("join-room-response", response => {
+            console.log(response)
+            setIsRoomInvalid(response.msg)
+        })
+    }
+
+    const checkRoomCreation = (setRoomCreationLoading) => {
+        if(socket){
+            socket.on("create-room-response", response => {
+                setRoomCreationLoading(s => ({response, loading: false}))
+
+            })
+        }
     }
 
     const createRoom = (roomName, roomLimit, username) => {
@@ -78,7 +102,7 @@ const useSocket = () => {
         }
     }
 
-    return { connectSocket, checkRoomAvailibility, createRoom, getRoomData, sendRoomData, joinRoom }
+    return { connectSocket,checkRoomCreation ,checkRoomAvailibility, createRoom, getRoomData, sendRoomData, joinRoom, startGame }
 
 }
 

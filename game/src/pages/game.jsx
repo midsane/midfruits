@@ -8,19 +8,23 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Enemy } from "../components/Enemy";
 import { useSocket } from "../hooks/usesocket";
 import { useEffect, useRef, useState } from "react";
-import { activeRoomAtom, currentPlayerAtom, isRoomFullAtom, playersAtom, socketIdAtom, usernameAtom } from "../store/atoms";
+import { activeRoomAtom, currentPlayerAtom, isRoomInvalidAtom, playersAtom, socketIdAtom, usernameAtom } from "../store/atoms";
 import { useParams } from "react-router";
 import { Modal } from "../components/Modal";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toast } from "../components/Toast";
 import { Settings } from "lucide-react";
+import { Background } from "../components/Background";
+import { createPortal } from "react-dom";
+import { PlayerBar } from "../components/playerBar";
+
 
 export default function GamePage() {
     const [players, setPlayers] = useRecoilState(playersAtom)
     const [currentPlayer, setCurrentPlayer] = useRecoilState(currentPlayerAtom)
     const [username, setUsername] = useRecoilState(usernameAtom)
-    const isRoomFull = useRecoilValue(isRoomFullAtom)
+    const isRoomInvalid = useRecoilValue(isRoomInvalidAtom)
     const {
         getRoomData,
         connectSocket,
@@ -34,6 +38,7 @@ export default function GamePage() {
     const setActiveRoom = useSetRecoilState(activeRoomAtom)
     const [doesRoomExist, setDoesRoomExist] = useState(true)
     const [showToast, setShowToast] = useState(false)
+    const [startGame, setStartGame] = useState(false)
     const [showSetting, setShowSetting] = useState(false)
 
     const handleClick = () => {
@@ -45,6 +50,12 @@ export default function GamePage() {
         setUsername(usernameRef.current.value)
     }
 
+    useEffect(() => {
+        if (players?.gameHasStarted) {
+            console.log("game starts!");
+            setStartGame(true)
+        }
+    }, [players])
 
     useEffect(() => {
 
@@ -65,8 +76,7 @@ export default function GamePage() {
 
         }
     }, [username, socketId])
-    console.log(isRoomFull)
-    console.log(askUser)
+    console.log(players)
 
     if (askUser) {
         return <>
@@ -77,43 +87,106 @@ export default function GamePage() {
             </div></>
     }
     else {
-        return (<>
+        return (<Background>
             {!doesRoomExist && <Toast setShowToast={setDoesRoomExist} showToast={doesRoomExist} msg="room does not exist" />}
-            <AnimatePresence>{isRoomFull && <motion.div
+            <AnimatePresence>{isRoomInvalid && <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="w-fit flex flex-col gap-4 p-10 h-fit bg-pink-300 rounded fixed z-50 translate-x-[-50%] left-1/2 top-1/2 translate-y-[-50%]" >
-                <p>Sorry, This room is completely filled!</p>
+                className="w-fit flex flex-col text-xl gap-6 p-20 h-fit bg-pink-300 rounded-lg fixed z-50 translate-x-[-50%] left-1/2 top-1/2 translate-y-[-50%]" >
+                <p>{isRoomInvalid}</p>
                 <Link to="/" ><button className="rounded-full hover:scale-105 active:scale-95 duration-75 ease-linear bg-amber-300 p-2 " >Go to Home Page...</button></Link>
             </motion.div>}</AnimatePresence>
             {!players ? <>loading...</> :
                 <GameArena>
+                    <AnimatePresence>
+                        {!startGame && <StartGamePanel players={players} />}
+                    </AnimatePresence>
+
                     <Player />
                     <Music />
                     <ObstaclePosition />
 
                     {/* <MagicItem />
             <Enemy /> */}
-                    <div onClick={() => setShowSetting(prev => !prev)} className="fixed cursor-pointer z-50 active:scale-95 hover:scale-105 top-0 backdrop-blur-3xl right-0 " ><Settings size={50} color="black" /></div>
-                {showSetting && <SettingPanel />}
+                    <motion.div onClick={() => setShowSetting(prev => !prev)}
+                        className="fixed cursor-pointer z-50 active:scale-95 hover:scale-105 top-0 backdrop-blur-3xl right-0 " >
+                        <Settings size={50} color="black" />
+                    </motion.div>
+                    <AnimatePresence>
+                        {showSetting && <SettingPanel players={players} />}
+                    </AnimatePresence>
                 </GameArena>
 
-            }</>)
+            }</Background>)
     }
 
 }
 
 
-const SettingPanel = () => {
-    return (<div className="p-10  text-2xl pt-20 rounded-sm fixed z-10 top-0 gap-4 bg-pink-300 right-0 flex flex-col"> 
-        <p>{`Room name: ${"lkasdjf"}`}</p>
-        <div className="flex flex-col gap-2 " >
-           <p className="bg-amber-200" >adi</p>
-            <p className="bg-amber-200" >lavneesh</p>
-            <p className="bg-amber-200" >yoyo</p>
+const StartGamePanel = ({ players }) => {
+    const [startGame, setStartGame] = useState(false)
+    let playersJoined = 0;
+    for (let player of players.participants) {
+        if (player.startGame) playersJoined++;
+    }
+    const val = (playersJoined / players.roomLimit) * 100;
+    return (createPortal(<motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className="w-screen h-screen flex justify-center items-center "
+    >
+        <div className="p-10 rounded-md flex flex-col gap-2  fixed top-40  border-2  border-black
+         bg-emerald-400 justify-center items-center text-xl z-40" >
+
+            <h1 className="text-3xl text-amber-300 " >Game Rules:</h1>
+            <p>fruits with prime numbers are worth +5 points</p>
+            <p>fruits with even numbers except 2 are worth -5 points</p>
+            <p>fruits with odd numbers are worth -3 points</p>
+            <GameRoomBtn startGame={startGame} content="Start Game!"
+                onClick={() => { setStartGame(true) }}
+            />
+            <p>{`${playersJoined} /${players.roomLimit} players have started the game`}</p>
+            <PlayerBar val={val} />
         </div>
-        <button className="bg-amber-300 p-2 active:scale-95 hover:scale-105 " >Leave Room</button>
-    </div>)
+
+
+    </motion.div>, document.body))
 }
 
+const SettingPanel = ({ players }) => {
+    const activeRoom = useRecoilValue(activeRoomAtom)
+    return (<motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className="p-10  text-2xl pt-20 rounded-md fixed z-40 top-0 gap-4 bg-gradient-to-tr border border-black from-green-300 via-green-400 to-emerald-400 right-0 flex flex-col">
+        <p >{`Room name: ${activeRoom}`}</p>
+        <div className="flex flex-col gap-2 " >
+            {players.participants.map((p, ind) => <p className="bg-amber-200 rounded-full p-1" >{p.playerName}</p>)}
+        </div>
+        <Link to='../../' >
+            <GameRoomBtn
+                onClick={() => { }}
+                content="Leave room" />
+        </Link>
+    </motion.div>)
+}
+
+
+const GameRoomBtn = ({ content, onClick, startGame = false }) => {
+    const { startGame: startGm } = useSocket()
+    const setPlayers = useSetRecoilState(playersAtom)
+    const activeRoom = useRecoilValue(activeRoomAtom)
+    useEffect(() => {
+        if (startGame)
+            startGm(activeRoom, setPlayers)
+    }, [activeRoom, startGame])
+    return (<button
+        disabled={startGame}
+        onClick={onClick}
+        className={`bg-amber-300 p-2 
+            ${!startGame ? "active:scale-95 hover:scale-105" : "opacity-70"} w-full `} >{content}
+    </button>)
+}
