@@ -13,7 +13,7 @@ const useSocket = () => {
     useEffect(() => {
       
         if (!socket) {
-            socket = io("localhost:3000");
+            socket = io("https://midblade.onrender.com");
         }
     }, [socket])
 
