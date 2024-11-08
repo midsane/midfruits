@@ -142,15 +142,15 @@ io.on("connection", (socket) => {
       allRoomData[roomName].participants[playerInd].startGame = true;
 
       let peopleReady = 0;
-      for(const p of allRoomData[roomName].participants){
-        if(p.startGame){
-          peopleReady++
+      for (const p of allRoomData[roomName].participants) {
+        if (p.startGame) {
+          peopleReady++;
         }
       }
 
-      console.log(peopleReady)
+      console.log(peopleReady);
       if (peopleReady === allRoomData[roomName].roomLimit) {
-        allRoomData[roomName].gameHasStarted = true
+        allRoomData[roomName].gameHasStarted = true;
       }
 
       io.in(roomName).emit("start-game-response", {
@@ -266,18 +266,20 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("socket got disconnected");
-
+    let roomName;
     for (const key in allRoomData) {
       const ind = allRoomData[key].participants.findIndex(
         ({ playerId }) => playerId === socket.id
       );
 
       if (ind >= 0) {
+        roomName = key;
         allRoomData[key].participants.splice(ind, 1);
         console.log("succesfully deleted the socket from the room");
       }
     }
 
     console.log("now allroomdata is", allRoomData);
+    socket.to(roomName).emit("get-room-data", allRoomData[roomName]);
   });
 });
