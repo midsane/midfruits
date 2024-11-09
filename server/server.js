@@ -322,19 +322,23 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("socket got disconnected");
-    let roomName;
+
     for (const key in allRoomData) {
       const ind = allRoomData[key].participants.findIndex(
         ({ playerId }) => playerId === socket.id
       );
 
       if (ind >= 0) {
+        // if (allRoomData[key].participants.length <= 1) {
+        //   if (allRoomData[key].interval) {
+        //     clearInterval(allRoomData[key].interval);
+        //   }
+        // }
         allRoomData[key].participants.splice(ind, 1);
         console.log("succesfully deleted the socket from the room");
       }
     }
 
     console.log("now allroomdata is", allRoomData);
-    socket.to(roomName).emit("get-room-data", allRoomData[roomName]);
   });
 });
