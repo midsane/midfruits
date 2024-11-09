@@ -1,4 +1,4 @@
-const { createServer } = require("http");
+                                                                      const { createServer } = require("http");
 const { Server } = require("socket.io");
 require("dotenv").config();
 const httpServer = createServer();
@@ -65,6 +65,26 @@ const fixedFruitsData = [
     top: 60,
     left: 20,
   },
+  {
+    type: "odd",
+    top: 60,
+    left: 50,
+  },
+  {
+    type: "odd",
+    top: 60,
+    left: 80,
+  },
+  {
+    type: "odd",
+    top: 80,
+    left: 20,
+  },
+  {
+    type: "prime",
+    top: 90,
+    left: 30,
+  },
 ];
 
 const initiaPlayerPosition = [
@@ -86,6 +106,9 @@ const initiaPlayerPosition = [
   },
 ];
 
+const FRUIT_GENERATION_TIME = 4000;
+const FULL_GAME_TIME = 60 * 3 * 1000;
+
 const getUniquePosition = (participantsData) => {
   for (let { top: Top, left: Left } of initiaPlayerPosition) {
     for (let { top, left } of participantsData) {
@@ -98,13 +121,21 @@ const getUniquePosition = (participantsData) => {
 
 const generateNewFruits = (currentFruits) => {
   let newFruitData = [];
-  for (let { top: Top, left: Left } of fixedFruitsData) {
+  console.log("coming to generate fruits");
+  let flag = true;
+  for (let fixedFruit of fixedFruitsData) {
+    flag = true;
     for (let fruit of currentFruits) {
-      if (Top !== fruit.top && Left !== fruit.left) {
-        newFruitData.push(fruit);
+      if (fixedFruit.top === fruit.top && fixedFruit.left === fruit.left) {
+        flag = false;
       }
     }
+    if (flag) newFruitData.push(fixedFruit);
   }
+
+  console.log("unique fruit to generate from", newFruitData);
+
+  if (newFruitData.length === 0) return -1;
 
   const randInd = Math.floor(Math.random() * newFruitData.length);
   return fixedFruitsData[randInd];
@@ -118,6 +149,30 @@ const randomPosition = () => {
 io.on("connection", (socket) => {
   console.log("a new client got connected to the server ");
   console.log(allRoomData);
+
+  socket.on("fruit-generation", (roomName) => {
+    if (!allRoomData[roomName]) return;
+    const interval = setInterval(() => {
+      console.log(allRoomData[roomName]);
+      if (allRoomData[roomName]?.fruitsData) {
+        const newFruit = generateNewFruits(allRoomData[roomName].fruitsData);
+        if (newFruit === -1) return;
+        console.log(newFruit);
+        allRoomData[roomName].fruitsData.push(newFruit);
+        io.in(roomName).emit(
+          "fruit-generation-response",
+          allRoomData[roomName].fruitsData
+        );
+      }
+    }, FRUIT_GENERATION_TIME);
+
+    allRoomData[roomName].interval = interval;
+    if (allRoomData[roomName].interval) {
+      setTimeout(() => {
+        clearInterval(allRoomData[roomName].interval);
+      }, FULL_GAME_TIME);
+    }
+  });
 
   socket.on("start-game", (roomName) => {
     try {
@@ -142,15 +197,15 @@ io.on("connection", (socket) => {
       allRoomData[roomName].participants[playerInd].startGame = true;
 
       let peopleReady = 0;
-      for(const p of allRoomData[roomName].participants){
-        if(p.startGame){
-          peopleReady++
+      for (const p of allRoomData[roomName].participants) {
+        if (p.startGame) {
+          peopleReady++;
         }
       }
 
-      console.log(peopleReady)
+      console.log(peopleReady);
       if (peopleReady === allRoomData[roomName].roomLimit) {
-        allRoomData[roomName].gameHasStarted = true
+        allRoomData[roomName].gameHasStarted = true;
       }
 
       io.in(roomName).emit("start-game-response", {
@@ -246,6 +301,7 @@ io.on("connection", (socket) => {
       allRoomData[roomName] = {
         hostId: socket.id,
         gameHasStarted: false,
+        interval: null,
         hostName: hostname,
         roomLimit,
         fruitsData: [],
@@ -273,6 +329,11 @@ io.on("connection", (socket) => {
       );
 
       if (ind >= 0) {
+        // if (allRoomData[key].participants.length <= 1) {
+        //   if (allRoomData[key].interval) {
+        //     clearInterval(allRoomData[key].interval);
+        //   }
+        // }
         allRoomData[key].participants.splice(ind, 1);
         console.log("succesfully deleted the socket from the room");
       }
