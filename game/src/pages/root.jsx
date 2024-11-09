@@ -11,6 +11,23 @@ export const Root = ({ children }) => {
     const navigate = useNavigate()
     const usernameRef = useRef()
     const setIsRoomInvalid = useSetRecoilState(isRoomInvalidAtom)
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 900) {
+                alert("open this website in laptop/bigger screen to view the buggy version!!");
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        handleResize();
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
   
     const { connectSocket } = useSocket()
     useEffect(() => {

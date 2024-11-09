@@ -48,6 +48,22 @@ export default function GamePage() {
     const [startGame, setStartGame] = useState(false)
     const [showSetting, setShowSetting] = useState(false)
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 900) {
+                alert("open this website in laptop/bigger screen to view the buggy version!!");
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        handleResize();
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     const handleClick = () => {
 
         if (usernameRef.current.value === "") {
