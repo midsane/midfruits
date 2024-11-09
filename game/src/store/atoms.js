@@ -2,6 +2,11 @@ import { atom } from "recoil";
 import { img1, simg4 } from "../Data/data";
 import { ENEMY_COORDINATES } from "../Data/data";
 
+const fruitsDataAtom = atom({
+  key: "fruitsDataAtom",
+  default: []
+})
+
 const playersAtom = atom({
   key: "playersAtom",
   default: null,
@@ -61,5 +66,6 @@ export {
   currentPlayerAtom,
   activeRoomAtom,
   socketIdAtom,
-  isRoomInvalidAtom
+  isRoomInvalidAtom,
+  fruitsDataAtom
 };

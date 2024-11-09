@@ -1,43 +1,19 @@
-import { useRecoilState } from "recoil";
-import { magicItemsAtom } from "../store/atoms";
+import { useRecoilValue } from "recoil";
 import { Obstacle } from "./Obstacle";
-import { MAGIC_ITEM_COORDINATES } from "../Data/data";
-import { useEffect } from "react";
-
-const MagicItem = () => {
-
-  const [magicItem, setMagicItem] = useRecoilState(magicItemsAtom);
-
-  const randomGenerate = () => {
-    const ArrToChooseFrom = MAGIC_ITEM_COORDINATES.filter(m => !magicItem.includes(m))
-
-    if (ArrToChooseFrom.length === 0 || magicItem.length > 8) return
-    const randomInd = Math.floor(Math.random() * ArrToChooseFrom.length)
+import { fruitsDataAtom } from "../store/atoms";
 
 
-    setMagicItem(magicItem => {
-      const newMagicItem = magicItem.map(m => (m))
-      newMagicItem.push(ArrToChooseFrom[randomInd])
-      return newMagicItem
-    })
+const Fruits = () => {
 
-  };
-
-  useEffect(() => {
-    const magicItemInterval = setInterval(() => {
-      randomGenerate();
-    }, 2000);
-
-    return () => clearInterval(magicItemInterval);
-  }, [magicItem]);
-
+  const fruitsData = useRecoilValue(fruitsDataAtom)
+  console.log(fruitsData)
   return (
     <>
-      {magicItem.map((p, i) => (
+      {fruitsData.map((p, i) => (
         <Obstacle key={i} obstaclesData={p} />
       ))}
     </>
   );
 };
 
-export { MagicItem };
+export { Fruits };

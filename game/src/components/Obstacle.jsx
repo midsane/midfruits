@@ -23,6 +23,8 @@ const Obstacle = ({ obstaclesData }) => {
         case "mushroom":
             imgToRender = mushroomImg;
             break;
+        default: 
+            imgToRender = mushroomImg;
     }
 
     return (

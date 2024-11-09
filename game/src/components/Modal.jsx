@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 export const Modal = ({ textArray, handleClose }) => {
     return (<motion.div
     >
-        <h6 className="fixed text-amber-300 title2 text-[0.4rem] top-[5%] left-1/2 translate-x-[-50%]" >MidBlade</h6>
+        <h6 className="fixed text-amber-300 title2 text-[0.4rem] top-[5%] left-1/2 translate-x-[-50%]" >MidFruits</h6>
         <PlayGame textArray={textArray} />
 
         <motion.div

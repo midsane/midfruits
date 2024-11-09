@@ -41,10 +41,10 @@ export const Root = ({ children }) => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0, }}
                     transform={{ duration: 1 }}
-                    className="fixed z-50 rounded-full flex justify-center items-center bg-pink-300 p-96 left-1/2 top-1/2  translate-x-[-50%] translate-y-[-50%] " ><dialog className="rounded-lg p-20" open>
+                    className="fixed z-50 rounded-full flex justify-center items-center bg-pink-300 p-60 left-1/2 top-1/2  translate-x-[-50%] translate-y-[-50%] " ><dialog className="rounded-lg p-8" open>
                         <div className="flex flex-col" >
-                            <p className="pixelify-sans m-auto my-4 text-4xl" > Welcome to MidBlade</p>
-                            <input ref={usernameRef} className="p-10 rounded-lg bg-slate-100 text-2xl pixelify-sans" placeholder="username" />
+                            <p className="pixelify-sans m-auto my-4 text-2xl" > Welcome to MidFruits</p>
+                            <input ref={usernameRef} className="p-2 rounded-lg bg-slate-100 text-lg pixelify-sans" placeholder="username" />
                             <button onClick={handleClick} className="cursor-pointer hover:bg-amber-300 px-6 py-2 active:scale-95 bg-amber-200 pixelify-sans" >ok</button>
                         </div>
 

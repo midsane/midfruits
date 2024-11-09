@@ -66,7 +66,7 @@ export const HomePage = () => {
                         <motion.div
 
                         >
-                            <h6 className="fixed text-amber-300 title2 text-8xl top-[5%] left-1/2 translate-x-[-50%]" >MidBlade</h6>
+                            <h6 className="fixed text-amber-300 title2 text-8xl top-[5%] left-1/2 translate-x-[-50%]" >MidFruits</h6>
                             <PlayGame />
 
 

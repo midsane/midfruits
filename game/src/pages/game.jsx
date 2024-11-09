@@ -1,16 +1,21 @@
 
 import { Player } from "../components/Player"
 import { Music } from "../components/Music";
-import { MagicItem } from "../components/MagicItem";
+import { Fruits } from "../components/MagicItem";
 import { ObstaclePosition } from "../components/Obstacle";
 import { GameArena } from "../components/GameArena";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Enemy } from "../components/Enemy";
 import { useSocket } from "../hooks/usesocket";
 import { useEffect, useRef, useState } from "react";
-import { activeRoomAtom, currentPlayerAtom, isRoomInvalidAtom, playersAtom, socketIdAtom, usernameAtom } from "../store/atoms";
+import {
+    activeRoomAtom,
+    currentPlayerAtom,
+    isRoomInvalidAtom,
+    playersAtom,
+    socketIdAtom,
+    usernameAtom
+} from "../store/atoms";
 import { useParams } from "react-router";
-import { Modal } from "../components/Modal";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toast } from "../components/Toast";
@@ -22,9 +27,11 @@ import { PlayerBar } from "../components/playerBar";
 
 export default function GamePage() {
     const [players, setPlayers] = useRecoilState(playersAtom)
+    const { generateFruit } = useSocket()
     const [currentPlayer, setCurrentPlayer] = useRecoilState(currentPlayerAtom)
     const [username, setUsername] = useRecoilState(usernameAtom)
     const isRoomInvalid = useRecoilValue(isRoomInvalidAtom)
+
     const {
         getRoomData,
         connectSocket,
@@ -35,7 +42,7 @@ export default function GamePage() {
     const usernameRef = useRef()
     const { gameId } = useParams()
     const socketId = useRecoilValue(socketIdAtom)
-    const setActiveRoom = useSetRecoilState(activeRoomAtom)
+    const [activeRoom, setActiveRoom] = useRecoilState(activeRoomAtom)
     const [doesRoomExist, setDoesRoomExist] = useState(true)
     const [showToast, setShowToast] = useState(false)
     const [startGame, setStartGame] = useState(false)
@@ -54,6 +61,7 @@ export default function GamePage() {
         if (players?.gameHasStarted) {
             console.log("game starts!");
             setStartGame(true)
+            generateFruit(activeRoom)
         }
     }, [players])
 
@@ -76,7 +84,7 @@ export default function GamePage() {
 
         }
     }, [username, socketId])
-    console.log(players)
+
 
     if (askUser) {
         return <>
@@ -106,9 +114,7 @@ export default function GamePage() {
                     <Player />
                     <Music />
                     <ObstaclePosition />
-
-                    {/* <MagicItem />
-            <Enemy /> */}
+                    {/* <Fruits />  */}
                     <motion.div onClick={() => setShowSetting(prev => !prev)}
                         className="fixed cursor-pointer z-50 active:scale-95 hover:scale-105 top-0 backdrop-blur-3xl right-0 " >
                         <Settings size={50} color="black" />
@@ -135,7 +141,7 @@ const StartGamePanel = ({ players }) => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="w-screen h-screen flex justify-center items-center "
+        className="w-screen h-screen z-10 fixed flex justify-center items-center "
     >
         <div className="p-10 rounded-md flex flex-col gap-2  fixed top-40  border-2  border-black
          bg-emerald-400 justify-center items-center text-xl z-40" >
@@ -161,10 +167,13 @@ const SettingPanel = ({ players }) => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="p-10  text-2xl pt-20 rounded-md fixed z-40 top-0 gap-4 bg-gradient-to-tr border border-black from-green-300 via-green-400 to-emerald-400 right-0 flex flex-col">
+        className="p-10  text-2xl pt-12 rounded-md fixed z-40 top-0 gap-3  bg-gradient-to-tr border border-black from-green-300 via-green-400 to-emerald-400 right-0 flex flex-col">
         <p >{`Room name: ${activeRoom}`}</p>
-        <div className="flex flex-col gap-2 " >
-            {players.participants.map((p, ind) => <p className="bg-amber-200 rounded-full p-1" >{p.playerName}</p>)}
+        <div className="flex flex-col gap-2 text-lg " >
+            {players.participants.map((p, ind) => <div className="flex  font-bold justify-between ">
+                <p className=" text-amber-300 rounded-full p-1" >{p.playerName}</p>
+                <p className="text-pink-300 " >{p.points} pts</p>
+            </div>)}
         </div>
         <Link to='../../' >
             <GameRoomBtn
