@@ -64,7 +64,7 @@ const Player = () => {
       const topDiff = Math.abs(obs.top - currentPlayerState.top);
       const leftDiff = Math.abs(obs.left - currentPlayerState.left);
 
-      return topDiff < 7 && leftDiff < 7;
+      return topDiff < 7 && leftDiff < 5;
     })
 
     return collding
