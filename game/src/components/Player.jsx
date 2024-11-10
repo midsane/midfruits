@@ -9,7 +9,7 @@ import { activeRoomAtom, currentPlayerAtom, fruitsDataAtom, playersAtom, socketI
 import { useSocket } from "../hooks/usesocket";
 
 const EVEN_POINTS = -5;
-const PRIME_POINTS = 5;
+const PRIME_POINTS = 10;
 const ODD_POINTS = -3;
 
 const Player = () => {

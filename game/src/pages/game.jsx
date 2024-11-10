@@ -271,9 +271,9 @@ const StartGamePanel = ({ players }) => {
          bg-emerald-400 justify-center items-center text-xl z-50" >
 
             <h1 className="text-3xl text-amber-300 " >Game Rules:</h1>
-            <p>fruits with prime numbers are worth +5 points</p>
-            <p>fruits with even numbers except 2 are worth -5 points</p>
-            <p>fruits with odd numbers are worth -3 points</p>
+            <p>fruits with prime numbers are worth +10 points</p>
+            <p>fruits with even(NOT PRIME) numbers are worth -5 points</p>
+            <p>fruits with odd(NOT PRIME) numbers are worth -3 points</p>
             <GameRoomBtn startGame={startGame} content="Start Game!"
                 onClick={() => {
                     audioRef.current.play()
