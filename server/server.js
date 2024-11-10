@@ -86,6 +86,9 @@ const initiaPlayerPosition = [
   },
 ];
 
+const FRUIT_GENERATION_TIME = 2000;
+const FULL_GAME_TIME = 30000;
+
 const getUniquePosition = (participantsData) => {
   for (let { top: Top, left: Left } of initiaPlayerPosition) {
     for (let { top, left } of participantsData) {
@@ -142,20 +145,41 @@ io.on("connection", (socket) => {
       allRoomData[roomName].participants[playerInd].startGame = true;
 
       let peopleReady = 0;
-      for(const p of allRoomData[roomName].participants){
-        if(p.startGame){
-          peopleReady++
+      for (const p of allRoomData[roomName].participants) {
+        if (p.startGame) {
+          peopleReady++;
         }
       }
 
-      console.log(peopleReady)
+      console.log(peopleReady);
+
       if (peopleReady === allRoomData[roomName].roomLimit) {
-        allRoomData[roomName].gameHasStarted = true
+        allRoomData[roomName].gameHasStarted = true;
+        io.in(roomName).emit("start-game-response", {
+          status: 200,
+          msg: "start the game in the room",
+          players: allRoomData[roomName],
+        });
+
+
+        const intervalId = setInterval(() => {
+          const randomFruit = generateNewFruits(allRoomData[roomName].fruitsData)
+          if(randomFruit == -1) return;
+          allRoomData[roomName].fruitsData.push(randomFruit)
+          io.to(roomName).emit("get-fruit", allRoomData[roomName]);
+        }, FRUIT_GENERATION_TIME);
+
+        
+        setTimeout(() => {
+          clearInterval(intervalId); 
+        }, FULL_GAME_TIME);
+
+        return;
       }
 
       io.in(roomName).emit("start-game-response", {
         status: 200,
-        msg: "start the game in the room",
+        msg: "player has toggled start game",
         players: allRoomData[roomName],
       });
     } catch (error) {
