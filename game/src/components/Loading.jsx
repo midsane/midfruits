@@ -27,7 +27,7 @@ export const MidFruitLoading = () => {
     const runes = ['L', 'O', 'A', 'D', 'I', 'N', 'G']
 
     return (
-       
+
         <Background>
             <div className="relative z-0 flex flex-col items-center justify-center h-screen">
                 <div className="w-64 h-64 bg-emerald-300 bg-contain bg-center bg-no-repeat relative">
@@ -55,6 +55,6 @@ export const MidFruitLoading = () => {
                     ))}
                 </div>
             </div></Background>
-        
+
     )
 }

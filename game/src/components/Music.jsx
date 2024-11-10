@@ -1,6 +1,6 @@
 import { useState } from "react";
 const Music = () => {
-    const[audio] = useState(new Audio("/assets/audio.mp3"));
+    const [audio] = useState(new Audio("/assets/audio.mp3"));
     const [audioPlaying, setAudioPlaying] = useState(false);
 
     const handleMusic = () => {

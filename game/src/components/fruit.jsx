@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil";
 import { Obstacle } from "./Obstacle";
-import {  fruitsDataAtom } from "../store/atoms";
+import { fruitsDataAtom } from "../store/atoms";
 
 
 const Fruits = () => {

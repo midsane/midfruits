@@ -23,7 +23,7 @@ export const HomePage = () => {
 
     const handleAnimateInput = () => {
         if (text === "") return
-        console.log("button  1 clicked")
+        
         setText("")
         animate(".button", { top: "0%", zIndex: "10", width: "200vw", height: "200vh" }, {
             duration: 0.2,
@@ -33,7 +33,7 @@ export const HomePage = () => {
     };
 
     const handleClose = () => {
-        console.log("button  2 clicked")
+     
         setText("Play Now!")
         animate(".button", { top: "70%", zIndex: "0", width: "fit-content", height: "fit-content" }, {
             duration: 0.2,
@@ -41,7 +41,7 @@ export const HomePage = () => {
             type: "spring",
         });
     }
-    console.log(text)
+  
 
     return (
         <>
@@ -97,7 +97,7 @@ const Button = ({ content }) => {
     
     
     const handleBtnBro = (content) => {
-        console.log("inside handleBtn")
+        
         switch (content) {
             case "Create Room":
                 setShowModal("create")
@@ -129,14 +129,14 @@ const Button = ({ content }) => {
         switch (sign) {
             case "plus":
                 if (roomLimit == 4) {
-                    console.log("room max val cannot be more than 4");
+                   
                     return;
                 }
                 setRoomLimit(rooml => rooml + 1);
                 break;
             case "minus":
                 if (roomLimit == 1) {
-                    console.log("room max val cannot be less than 1");
+                  
                     return;
                 }
                 setRoomLimit(rooml => rooml - 1);
@@ -147,7 +147,7 @@ const Button = ({ content }) => {
 
 
         if (roomnameRef.current && roomnameRef.current.value === "") {
-            console.log("room name cannot be empty");
+          
             return;
         }
 

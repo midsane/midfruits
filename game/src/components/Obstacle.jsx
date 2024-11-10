@@ -31,12 +31,12 @@ const Obstacle = ({ obstaclesData }) => {
                 left: obstaclesData.left + "%",
             }}
             className={` w-20 h-20 absolute z-0`} >
-            {imgToRender ? <img 
-            
-            src={imgToRender} /> : <div className=" w-full h-full relative" >
-                <img 
-                className="absolute w-full h-full"
-                src={obstaclesData.img}></img >
+            {imgToRender ? <img
+
+                src={imgToRender} /> : <div className=" w-full h-full relative" >
+                <img
+                    className="absolute w-full h-full"
+                    src={obstaclesData.img}></img >
                 <p className="absolute text-2xl font-bold left-1/2 translate-x-[-50%] top-1/2 translate-y-[-50%]" >{obstaclesData.val}</p>
             </div>
             }

@@ -7,8 +7,6 @@ import { Root } from "./pages/root"
 import { RecoilRoot } from "recoil";
 
 
-
-
 const router = createBrowserRouter([
   {
     path: "/", element: <Root />, children: [
@@ -21,7 +19,7 @@ const router = createBrowserRouter([
   {
     path: "/room/:gameId", element: <GamePage />
   }
-  
+
 ])
 
 export default function App() {

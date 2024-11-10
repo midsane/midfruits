@@ -5,7 +5,7 @@ import {
   OBSTACLE_POSITION,
   playerMoves,
 } from "../Data/data";
-import { activeRoomAtom, currentPlayerAtom, fruitsDataAtom, magicItemsAtom, playersAtom, socketIdAtom } from "../store/atoms";
+import { activeRoomAtom, currentPlayerAtom, fruitsDataAtom, playersAtom, socketIdAtom } from "../store/atoms";
 import { useSocket } from "../hooks/usesocket";
 
 const EVEN_POINTS = -5;
@@ -22,7 +22,7 @@ const Player = () => {
   const playerId = useRecoilValue(socketIdAtom)
 
   const fruitsDataRef = useRef(fruitsData);
-  
+
   const pointsGainSoundRef = useRef()
   const pointsLoseSoundRef = useRef()
 
@@ -40,8 +40,7 @@ const Player = () => {
     for (const fruit of fruitsDataRef.current) {
       const topDiff = Math.abs(fruit.top - currentPlayerState.top);
       const leftDiff = Math.abs(fruit.left - currentPlayerState.left);
-      console.log(currentPlayerState.top)
-      console.log(fruit.top)
+
 
       if (topDiff < 10 && leftDiff < 5) {
         switch (fruit.categ) {
@@ -107,14 +106,14 @@ const Player = () => {
         }
 
         const collisionWithFruit = checkCollisionWithFruits(currentPlayerState)
-        console.log(collisionWithFruit)
+
         if (collisionWithFruit) {
           currentPlayerState.points += collisionWithFruit.worth;
-          console.log("delete")
+
           deleteFruit(activeRoom, collisionWithFruit.index)
         }
 
-        console.log(currentPlayerState)
+
         sendRoomData(currentPlayerState, activeRoom)
         return currentPlayerState
       })

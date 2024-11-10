@@ -43,4 +43,4 @@ function HeaderGameName() {
     )
 }
 
-export {HeaderGameName}
+export { HeaderGameName }

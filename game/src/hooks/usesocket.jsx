@@ -28,7 +28,7 @@ const useSocket = () => {
         if (socket) {
 
             socket.on("connect", () => {
-                console.log("connected to ws server successfully", socket)
+
                 setSocketId(socket.id)
                 clearAllStates()
 
@@ -37,17 +37,15 @@ const useSocket = () => {
     }
 
     const joinRoom = (roomName, username) => {
-        console.log("sending to join-room")
         socket.emit("join-room", { roomName, username })
     }
 
     const startGame = (roomName) => {
         socket.emit("start-game", roomName)
         socket.on("start-game-response", data => {
-            console.log(data)
+
             if (data.status === 200) {
                 setPlayers(data.players)
-                console.log(data.players)
             }
         })
         socket.on("get-fruit", data => {
@@ -100,7 +98,7 @@ const useSocket = () => {
         setActiveRoom(null)
         setFruitsData([])
         setStartGame(false)
-        setTimeRemGame(3*60*1000)
+        setTimeRemGame(3 * 60 * 1000)
         setGameHasEnded(false)
 
     }
@@ -108,7 +106,7 @@ const useSocket = () => {
 
         if (socket) {
             socket.on("get-room-data", roomData => {
-                console.log("getting room data")
+
                 if (!roomData) {
                     setDoesRoomExist(false);
                     return;

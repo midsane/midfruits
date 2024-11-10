@@ -1,13 +1,8 @@
 import img1 from "../assets/character__1_-removebg-preview.png";
-import img2 from "../assets/character__2_-removebg-preview.png";
-import img3 from "../assets/character__3_-removebg-preview.png";
 import img4 from "../assets/character__4_-removebg-preview.png";
 import img5 from "../assets/character__5_-removebg-preview.png";
 import img6 from "../assets/character__6_-removebg-preview.png";
-import img7 from "../assets/character__7_-removebg-preview.png";
-import img8 from "../assets/character__8_-removebg-preview.png";
-import magicItemImg from "../assets/MagicItem__1_-removebg-preview.png"
-import healthPotionImg from "../assets/HealthPotion-removebg-preview.png";
+
 import mushroomImg from "../assets/Mushroom__1_-removebg-preview.png";
 import treeImg from "../assets/ancientTree__1_-removebg-preview.png";
 
@@ -16,74 +11,20 @@ import enemyimg2 from "../assets/enemy2-removebg-preview.png";
 import enemyimg3 from "../assets/enemy3-removebg-preview.png";
 import enemyimg4 from "../assets/enemy4-removebg-preview.png";
 
-import simg1 from "../assets/swordsman1.png";
-import simg2 from "../assets/swordsman2.png";
-import simg3 from "../assets/swordsman3.png";
-import simg4 from "../assets/swordsman4.png";
 import grassImg from "../assets/grass__1_-removebg-preview.png";
 import stoneImg from "../assets/stone__1_-removebg-preview.png";
 
-import sword2 from "../assets/sword2-removebg-preview.png"
-import sword1 from "../assets/sword1-removebg-preview.png"
-import deadpoolImg from "../assets/deadpoolfix-removebg-preview.png"
+import sword2 from "../assets/sword2-removebg-preview.png";
+import sword1 from "../assets/sword1-removebg-preview.png";
+import deadpoolImg from "../assets/deadpoolfix-removebg-preview.png";
 
-import firefruit from "../assets/firefruit-removebg-preview.png"
-import gomugomu from "../assets/gomugomu-removebg-preview.png"
-import fruit1 from "../assets/fruit1-removebg-preview.png"
+import firefruit from "../assets/firefruit-removebg-preview.png";
+import gomugomu from "../assets/gomugomu-removebg-preview.png";
+import fruit1 from "../assets/fruit1-removebg-preview.png";
 import fruit2 from "../assets/fruit2-removebg-preview.png";
 import fruit3 from "../assets/fruit3-removebg-preview.png";
 import fruit4 from "../assets/fruit4-removebg-preview.png";
 import fruit5 from "../assets/fruit5-removebg-preview.png";
-
-
-
-const MAGIC_POINTS = 10;
-const HEALTH_POINTS = 10;
-const MAGIC_ITEM_COORDINATES = [
-  { top: 10, left: 20, type: "mana" },
-  { top: 20, left: 30, type: "mana" },
-  { top: 30, left: 15, type: "mana" },
-  { top: 40, left: 25, type: "mana" },
-  { top: 50, left: 75, type: "health" },
-  { top: 60, left: 80, type: "mana" },
-  { top: 60, left: 80, type: "mana" },
-  { top: 50, left: 70, type: "mana" },
-  { top: 80, left: 60, type: "health" },
-  { top: 10, left: 90, type: "mana" },
-  { top: 20, left: 80, type: "mana" },
-  { top: 10, left: 75, type: "mana" },
-  { top: 20, left: 65, type: "mana" },
-  { top: 70, left: 60, type: "health" },
-  { top: 60, left: 90, type: "mana" },
-  { top: 10, left: 20, type: "mana" },
-  { top: 20, left: 20, type: "mana" },
-  { top: 30, left: 90, type: "mana" },
-  { top: 40, left: 20, type: "health" },
-  { top: 50, left: 10, type: "mana" },
-  { top: 60, left: 80, type: "mana" },
-  { top: 10, left: 20, type: "mana" },
-  { top: 55, left: 70, type: "mana" },
-  { top: 30, left: 60, type: "health" },
-  { top: 65, left: 70, type: "mana" },
-  { top: 50, left: 20, type: "mana" },
-  { top: 75, left: 45, type: "mana" },
-  { top: 5, left: 5, type: "mana" },
-  { top: 75, left: 20, type: "health" },
-  { top: 80, left: 60, type: "mana" },
-  { top: 80, left: 70, type: "mana" },
-  { top: 40, left: 10, type: "mana" },
-  { top: 50, left: 30, type: "mana" },
-  { top: 80, left: 80, type: "health" },
-];
-
-const ENEMY_COORDINATES = [
-  { top: 20, left: 15, type: "horse" },
-  { top: 50, left: 15, type: "horse" },
-  { top: 60, left: 15, type: "horse" },
-  { top: 70, left: 15, type: "horse" },
-  { top: 40, left: 15, type: "horse" },
-  { top: 30, left: 80, type: "horse" },
-];
 
 const OBSTACLE_POSITION = [
   { top: 0, left: 0, type: "grass" },
@@ -190,29 +131,22 @@ const OBSTACLE_POSITION = [
 const SPEED = 1;
 
 const playerMoves = [img1, img4, img5, img6];
-const fruitArr = [firefruit, gomugomu, fruit1, fruit2, fruit3, fruit4, fruit5]
+const fruitArr = [firefruit, gomugomu, fruit1, fruit2, fruit3, fruit4, fruit5];
 
 const enemyMoves = [enemyimg1, enemyimg2, enemyimg3, enemyimg4];
 
 export {
   SPEED,
   OBSTACLE_POSITION,
-  MAGIC_ITEM_COORDINATES,
-  ENEMY_COORDINATES,
-  MAGIC_POINTS,
-  HEALTH_POINTS,
   playerMoves,
   enemyMoves,
   stoneImg,
   grassImg,
-  magicItemImg,
   mushroomImg,
   treeImg,
-  healthPotionImg,
   img1,
-  simg4,
   sword2,
   sword1,
   deadpoolImg,
-  fruitArr
+  fruitArr,
 };

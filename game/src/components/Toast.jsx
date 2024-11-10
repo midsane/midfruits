@@ -9,7 +9,7 @@ const Toast = ({ msg, showToast, setShowToast, time = 2000 }) => {
 
         return () => clearTimeout(timeout)
     })
-    console.log("coming here")
+
     return createPortal(<AnimatePresence>
         {showToast && <motion.div
             initial={{ y: -10, opacity: 0 }}

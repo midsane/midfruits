@@ -72,7 +72,7 @@ export default function GamePage() {
     const handleClick = () => {
 
         if (usernameRef.current.value === "") {
-            console.log('username cannot be empty');
+
             return
         }
         setUsername(usernameRef.current.value)
@@ -82,7 +82,7 @@ export default function GamePage() {
 
     useEffect(() => {
         if (players?.gameHasStarted) {
-            console.log("game starts!");
+
             setStartGame(true)
         }
     }, [players])
@@ -100,14 +100,14 @@ export default function GamePage() {
             joinRoom(gameId, username)
 
             checkRoomAvailibility();
-            console.log("calling getroomdata from game.jsx")
+
             getRoomData(setPlayers, setCurrentPlayer, currentPlayer, doesRoomExist)
-            console.log(askUser)
+
 
         }
     }, [username, socketId])
 
-    console.log(gameHasEnded, "GAMEHAS ENDED")
+
     if (askUser) {
         return <>
             {!doesRoomExist && <Toast setShowToast={setDoesRoomExist} showToast={doesRoomExist} msg="room does not exist" />}
@@ -230,7 +230,7 @@ const GameCounter = () => {
 
     const timeFormatter = (time) => {
         const seconds = time / 1000;
-        console.log(seconds)
+
         const minutes = seconds / 60;
         const remSeconds = seconds % 60;
 
@@ -291,13 +291,12 @@ const StartGamePanel = ({ players }) => {
 const SettingPanel = ({ players }) => {
     const currentPlayer = useRecoilValue(currentPlayerAtom)
     const activeRoom = useRecoilValue(activeRoomAtom)
-    console.log(players.participants)
-    console.log(currentPlayer)
+
     const remParticipants = players.participants.filter(p => {
         return p.playerId !== currentPlayer.playerId
     })
 
-    console.log(remParticipants)
+
 
     return (createPortal(<motion.div
         initial={{ opacity: 0, y: -20 }}

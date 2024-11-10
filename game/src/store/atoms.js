@@ -1,11 +1,11 @@
 import { atom } from "recoil";
-import { img1, simg4 } from "../Data/data";
-import { ENEMY_COORDINATES } from "../Data/data";
+import { img1 } from "../Data/data";
+
 
 const fruitsDataAtom = atom({
   key: "fruitsDataAtom",
-  default: []
-})
+  default: [],
+});
 
 const playersAtom = atom({
   key: "playersAtom",
@@ -13,18 +13,8 @@ const playersAtom = atom({
 });
 
 const currentPlayerAtom = atom({
-  key: 'currentPlayerAtom',
-  default: null
-})
-
-const enemiesAtom = atom({
-  key: "enemiesAtom",
-  default: ENEMY_COORDINATES,
-});
-
-const magicItemsAtom = atom({
-  key: "magicItemsAtom",
-  default: [],
+  key: "currentPlayerAtom",
+  default: null,
 });
 
 const charaFrameAtom = atom({
@@ -39,13 +29,13 @@ const usernameAtom = atom({
 
 const activeRoomAtom = atom({
   key: "activeRoomAtom",
-  default: ""
-})
+  default: "",
+});
 
 const socketIdAtom = atom({
   key: "socketIdAtom",
-  default: null
-})
+  default: null,
+});
 
 const isRoomInvalidAtom = atom({
   key: "isRoomFullAtom",
@@ -54,25 +44,22 @@ const isRoomInvalidAtom = atom({
 
 const startGameAtom = atom({
   key: "startGameAtom",
-  default: false
-})
+  default: false,
+});
 
 const timeRemGameAtom = atom({
   key: "timeRemGameAtom",
-  default: 3*60*1000
-})
+  default: 3 * 60 * 1000,
+});
 
 const gameHasEndedAtom = atom({
   key: "gameHasEndedAtom",
-  default: false
-})
-
+  default: false,
+});
 
 export {
   playersAtom,
-  magicItemsAtom,
   charaFrameAtom,
-  enemiesAtom,
   usernameAtom,
   currentPlayerAtom,
   activeRoomAtom,
@@ -81,5 +68,5 @@ export {
   fruitsDataAtom,
   startGameAtom,
   timeRemGameAtom,
-  gameHasEndedAtom
+  gameHasEndedAtom,
 };

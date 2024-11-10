@@ -10,16 +10,6 @@
   filter: none;
 }
 
-@keyframes magicItemAnimation {
-  from {
-    scale: 1;
-  }
-  to{
-    scale: 0.8;
-  }
-}
-
-
 .pixelify-sans-title {
   font-family: "Pixelify Sans", sans-serif;
   font-optical-sizing: auto;
