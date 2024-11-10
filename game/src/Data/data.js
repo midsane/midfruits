@@ -27,6 +27,14 @@ import sword2 from "../assets/sword2-removebg-preview.png"
 import sword1 from "../assets/sword1-removebg-preview.png"
 import deadpoolImg from "../assets/deadpoolfix-removebg-preview.png"
 
+import firefruit from "../assets/firefruit-removebg-preview.png"
+import gomugomu from "../assets/gomugomu-removebg-preview.png"
+import fruit1 from "../assets/fruit1-removebg-preview.png"
+import fruit2 from "../assets/fruit2-removebg-preview.png";
+import fruit3 from "../assets/fruit3-removebg-preview.png";
+import fruit4 from "../assets/fruit4-removebg-preview.png";
+import fruit5 from "../assets/fruit5-removebg-preview.png";
+
 
 
 const MAGIC_POINTS = 10;
@@ -181,7 +189,8 @@ const OBSTACLE_POSITION = [
 
 const SPEED = 1;
 
-const playerMoves = [img1, img2, img4, img5, img7, img6];
+const playerMoves = [img1, img4, img5, img6];
+const fruitArr = [firefruit, gomugomu, fruit1, fruit2, fruit3, fruit4, fruit5]
 
 const enemyMoves = [enemyimg1, enemyimg2, enemyimg3, enemyimg4];
 
@@ -204,5 +213,6 @@ export {
   simg4,
   sword2,
   sword1,
-  deadpoolImg
+  deadpoolImg,
+  fruitArr
 };

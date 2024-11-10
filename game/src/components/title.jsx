@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
-import { img1, sword1, sword2, deadpoolImg } from '../Data/data';
+import { sword1, deadpoolImg } from '../Data/data';
 
-import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { usernameAtom } from '../store/atoms';
 export const Title = ({ items = ["M", "I", "D", "F", "R", "U", "I", "T", "S"] }) => {

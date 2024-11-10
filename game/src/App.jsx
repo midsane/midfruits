@@ -8,18 +8,20 @@ import { RecoilRoot } from "recoil";
 
 
 
+
 const router = createBrowserRouter([
   {
     path: "/", element: <Root />, children: [
       {
         path: "home", element: <HomePage />
       },
-     
+
     ]
   },
   {
     path: "/room/:gameId", element: <GamePage />
   }
+  
 ])
 
 export default function App() {

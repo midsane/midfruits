@@ -1,22 +1,38 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Outlet, useNavigate } from "react-router";
 import { useSocket } from "../hooks/usesocket";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Title } from "../components/title";
 import { isRoomInvalidAtom, usernameAtom } from "../store/atoms";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { Background } from "../components/Background";
+import { MobileView } from "./mobile"; 
 export const Root = ({ children }) => {
     const [username, setUsername] = useRecoilState(usernameAtom)
     const navigate = useNavigate()
     const usernameRef = useRef()
     const setIsRoomInvalid = useSetRecoilState(isRoomInvalidAtom)
-  
-    const { connectSocket } = useSocket()
+
+    const [isSmallScreen, setIsSmallScreen] = useState(false)
+
     useEffect(() => {
+        const checkScreenSize = () => {
+            setIsSmallScreen(window.innerWidth < 1000)
+        }
+
+        checkScreenSize()
+        window.addEventListener('resize', checkScreenSize)
+
+        return () => window.removeEventListener('resize', checkScreenSize)
+    }, [])
+
+
+    const { connectSocket, clearAllStates } = useSocket()
+    useEffect(() => {
+        clearAllStates()
         connectSocket();
         setUsername("")
-        setIsRoomInvalid(null)
+        setIsRoomInvalid(null);
     }, [])
 
     const handleClick = () => {
@@ -33,10 +49,11 @@ export const Root = ({ children }) => {
 
     const painSound = new Audio("/assets/deadpoolsound.mp3")
 
-    return (<Background>
-         <Title />
+    return (isSmallScreen ? <MobileView /> :
+        <Background>
+            <Title />
             <AnimatePresence>
-                {username === ""  && <motion.div
+                {username === "" && <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0, }}
@@ -51,7 +68,7 @@ export const Root = ({ children }) => {
                     </dialog></motion.div>}
             </AnimatePresence>
             <Outlet>{children}</Outlet>
-    </Background>
+        </Background>
 
     );
 }

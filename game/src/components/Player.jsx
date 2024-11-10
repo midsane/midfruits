@@ -1,162 +1,81 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { PlayerBar } from "./playerBar";
-import { useEffect } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { useEffect, useRef } from "react";
 
 import {
   OBSTACLE_POSITION,
-  MAGIC_POINTS,
   playerMoves,
-  SPEED,
-  HEALTH_POINTS,
-  ENEMY_COORDINATES,
-  img1,
 } from "../Data/data";
-import { activeRoomAtom, currentPlayerAtom, magicItemsAtom, playersAtom, socketIdAtom } from "../store/atoms";
-import { CopyMinus, PlaySquare } from "lucide-react";
+import { activeRoomAtom, currentPlayerAtom, fruitsDataAtom, magicItemsAtom, playersAtom, socketIdAtom } from "../store/atoms";
 import { useSocket } from "../hooks/usesocket";
 
+const EVEN_POINTS = -5;
+const PRIME_POINTS = 5;
+const ODD_POINTS = -3;
+
 const Player = () => {
-  const [players, setPlayers] = useRecoilState(playersAtom);
-  const [magicItem, setMagicItem] = useRecoilState(magicItemsAtom);
+  const players = useRecoilValue(playersAtom);
+  const fruitsData = useRecoilValue(fruitsDataAtom)
+
   const [currentPlayer, setCurrentPlayer] = useRecoilState(currentPlayerAtom)
-  const { sendRoomData, getRoomData } = useSocket()
+  const { sendRoomData, deleteFruit } = useSocket()
   const activeRoom = useRecoilValue(activeRoomAtom)
   const playerId = useRecoilValue(socketIdAtom)
 
+  const fruitsDataRef = useRef(fruitsData);
+  
+  const pointsGainSoundRef = useRef()
+  const pointsLoseSoundRef = useRef()
+
   useEffect(() => {
-    // const handleBounce = () => {
-    //   const p1 = { top: players[0].top, left: players[0].left }
-    //   const p2 = { top: players[1].top, left: players[1].left }
+    pointsGainSoundRef.current = new Audio("/assets/elizabeth_sound.mp3")
+    pointsLoseSoundRef.current = new Audio("/assets/windows_xp_error.mp3")
+  }, [])
 
-    //   const diffTop = Math.abs(p1.top - p2.top)
-    //   const diffLeft = Math.abs(p1.left - p2.left)
+  useEffect(() => {
+    fruitsDataRef.current = fruitsData;
+  }, [fruitsData]);
 
-    //   const participants = players.map(player => ({ ...player }))
-    //   if (diffTop < 80 && diffLeft < 80) {
+  const checkCollisionWithFruits = (currentPlayerState) => {
 
-    //     const scenario1 = Math.abs(p1.top + bounce - (p2.top - bounce))
-    //     const scenario2 = Math.abs(p2.top + bounce - (p1.top - bounce))
+    for (const fruit of fruitsDataRef.current) {
+      const topDiff = Math.abs(fruit.top - currentPlayerState.top);
+      const leftDiff = Math.abs(fruit.left - currentPlayerState.left);
+      console.log(currentPlayerState.top)
+      console.log(fruit.top)
 
-    //     if (scenario1 > scenario2) {
-    //       participants[0].top += bounce
-    //       participants[1].top -= bounce
-    //     }
-    //     else {
-    //       participants[1].top += bounce
-    //       participants[0].top -= bounce
-    //     }
-
-    //     const scenario3 = Math.abs(p1.left + bounce - (p2.left - bounce))
-    //     const scenario4 = Math.abs(p2.left + bounce - (p1.left - bounce))
-
-    //     if (scenario3 > scenario4) {
-    //       participants[0].left += bounce
-    //       participants[1].left -= bounce
-    //     }
-    //     else {
-    //       participants[1].left += bounce
-    //       participants[0].left -= bounce
-    //     }
-
-    //     setPlayers(participants)
-
-    //     setPlayers(participants)
-    //   }
-
-    // }
-
-    // const currentPlayerNewPosition = { ...currentPlayer }
-
-
-    // const checkCollisionWithOtherPlayers = (p1, p2) => {
-    //   const diffTop = Math.abs(p1.top - p2.top);
-    //   const diffLeft = Math.abs(p1.left - p2.left);
-    //   if (diffTop < 6 && diffLeft < 6) return true;
-    //   else return false;
-    // };
-
-    // const checkCollisionWithEnemy = (p) => {
-    //   return ENEMY_COORDINATES.some((obs) => {
-    //     const diffTop = Math.abs(p.top - obs.top);
-    //     const diffLeft = Math.abs(p.left - obs.left);
-    //     return diffTop < 5 && diffLeft < 5;
-    //   });
-    // }
-
-    // const checkCollisonWithObstacles = (p) => {
-    //   return OBSTACLE_POSITION.some((obs) => {
-    //     const diffTop = Math.abs(p.top - obs.top);
-    //     const diffLeft = Math.abs(p.left - obs.left);
-
-    //     return diffTop < 5 && diffLeft < 5;
-    //   });
-    // };
-
-    // const checkCollisionWithMagic = () => {
-    //   console.log("inside collison checker for magic")
-    //   magicItem.forEach((magicCoor) => {
-    //     const magicTop = magicCoor.top;
-    //     const magicLeft = magicCoor.left;
-    //     const collidingPlayer = players.participants.find((player) => {
-    //       const playerTop = player.top;
-    //       const playerLeft = player.left;
-    //       console.log(player.top)
-    //       console.log(player.left)
-    //       console.log(magicTop)
-    //       console.log(magicLeft)
-    //       const diffTop = Math.abs(magicTop - playerTop);
-    //       const diffLeft = Math.abs(magicLeft - playerLeft);
-    //       return diffTop < 10 && diffLeft < 10;
-    //     });
-
-    //     if (collidingPlayer) {
-
-    //       setPlayers((players) => {
-    //         const newPlayers = players.participants.map((player) => {
-    //           if (player.playerId === collidingPlayer.playerId) {
-    //             if (magicCoor.type === "mana") {
-
-    //               return { ...player, manaBar: player.manaBar + MAGIC_POINTS };
-    //             }
-    //             else {
-
-    //               return { ...player, healthBar: player.healthBar + 40 };
-    //             }
-
-    //           }
-    //           return player;
-    //         })
-
-    //         const newState = {...players, participants: players.participants.map(p => ({...p}))}
-
-    //         newState.participants = newPlayers
-    //         return newState
-    //       }
-    //       );
-
-    //       setMagicItem((magicItem) => {
-    //         return magicItem.filter(mi => mi != magicCoor)
-    //       });
-
-    //     }
-    //   })
-    // }
-
-
-
-    const checkCollisionWithObjects = (currentPlayerState) => {
-      const collding = OBSTACLE_POSITION.some(obs => {
-        const topDiff = Math.abs(obs.top - currentPlayerState.top);
-        const leftDiff = Math.abs(obs.left - currentPlayerState.left);
-        return topDiff < 7 && leftDiff < 7 ;
-      })
-      
-      return collding
+      if (topDiff < 10 && leftDiff < 5) {
+        switch (fruit.categ) {
+          case "prime":
+            pointsGainSoundRef.current.play()
+            return { index: fruit.index, worth: PRIME_POINTS }
+          case "even":
+            pointsLoseSoundRef.current.play()
+            return { index: fruit.index, worth: EVEN_POINTS }
+          case "odd":
+            pointsLoseSoundRef.current.play()
+            return { index: fruit.index, worth: ODD_POINTS }
+        }
+      }
     }
+    return false
+  }
+
+  const checkCollisionWithObjects = (currentPlayerState) => {
+    const collding = OBSTACLE_POSITION.some(obs => {
+      const topDiff = Math.abs(obs.top - currentPlayerState.top);
+      const leftDiff = Math.abs(obs.left - currentPlayerState.left);
+
+      return topDiff < 7 && leftDiff < 7;
+    })
+
+    return collding
+  }
+
+  useEffect(() => {
 
     const inputFnc = (event) => {
       setCurrentPlayer(prev => {
-        const currentPlayerState = {...prev}
+        const currentPlayerState = { ...prev }
         switch (event.key) {
 
           case "ArrowUp":
@@ -182,14 +101,24 @@ const Player = () => {
 
         currentPlayerState.currentFrame = (currentPlayerState.currentFrame + 1) % playerMoves.length
 
-        if(checkCollisionWithObjects(currentPlayerState)) {
+        if (checkCollisionWithObjects(currentPlayerState)) {
           sendRoomData(players, currentPlayerState, activeRoom)
           return prev
         }
-        sendRoomData(players, currentPlayerState, activeRoom)
+
+        const collisionWithFruit = checkCollisionWithFruits(currentPlayerState)
+        console.log(collisionWithFruit)
+        if (collisionWithFruit) {
+          currentPlayerState.points += collisionWithFruit.worth;
+          console.log("delete")
+          deleteFruit(activeRoom, collisionWithFruit.index)
+        }
+
+        console.log(currentPlayerState)
+        sendRoomData(currentPlayerState, activeRoom)
         return currentPlayerState
       })
-    
+
 
     };
 
@@ -199,14 +128,13 @@ const Player = () => {
     };
   }, []);
 
-  
-  const remPlayers = players.participants.filter(({playerId: pid}) => {
+
+  const remPlayers = players.participants.filter(({ playerId: pid }) => {
     return pid !== playerId
   })
 
-  console.log(remPlayers)
-  console.log(currentPlayer)
-  
+
+
   return (
     <>
       {remPlayers.map((p, i) => <EachPlayer player={p} key={i} />)}
@@ -221,12 +149,16 @@ const EachPlayer = ({ player }) => {
 
   return (<div
 
-    style={{ top: `${player.top}%`, left: `${player.left}%` , zIndex: 10}}
-    className="image-container"
+    style={{ top: `${player.top}%`, left: `${player.left}%`, zIndex: 10 }}
+    className="image-container h-fit w-fit"
   >
     {/* <PlayerBar val={player.healthBar} type="health" />
     <PlayerBar val={player.manaBar} type="mana" /> */}
-    <p>{(player.playerName.slice(0,5)) + "..."}</p>
+    <span className="flex text-sm justify-between w-full h-4" >
+      <p>{(player.playerName.slice(0, 3)) + ".."}</p>
+      <p className="font-bold text-red-600"  >{player.points}</p>
+    </span>
+
     <img
       className={`${player.dx === -1 ? "invert" : ""}`}
       src={playerMoves[player.currentFrame]}

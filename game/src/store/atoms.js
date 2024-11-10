@@ -52,10 +52,21 @@ const isRoomInvalidAtom = atom({
   default: null,
 });
 
+const startGameAtom = atom({
+  key: "startGameAtom",
+  default: false
+})
 
+const timeRemGameAtom = atom({
+  key: "timeRemGameAtom",
+  default: 3*60*1000
+})
 
+const gameHasEndedAtom = atom({
+  key: "gameHasEndedAtom",
+  default: false
+})
 
-//  const [enemies, setEnemies] = useState([]);
 
 export {
   playersAtom,
@@ -67,5 +78,8 @@ export {
   activeRoomAtom,
   socketIdAtom,
   isRoomInvalidAtom,
-  fruitsDataAtom
+  fruitsDataAtom,
+  startGameAtom,
+  timeRemGameAtom,
+  gameHasEndedAtom
 };

@@ -5,7 +5,7 @@ const httpServer = createServer();
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
+    origin: "https://midfruits.vercel.app/",
   },
 });
 
@@ -49,22 +49,55 @@ let allRoomData = {};
 
 */
 
+const PRIME_NUMBERS = [
+  11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83,
+  89, 97,
+];
+
+const EVEN_NUMBERS = [
+  14, 18, 26, 34, 38, 46, 52, 58, 62, 68, 74, 76, 82, 86, 94, 20, 12, 48, 54,
+];
+
+const ODD_NUMBERS = [
+  21, 33, 39, 51, 57, 63, 69, 77, 81, 87, 91, 93, 99, 15, 25, 35, 45, 55, 65,
+  75, 85, 95,
+];
+
+const generatePrimeNumbers = () => {
+  return PRIME_NUMBERS[Math.floor(Math.random() * PRIME_NUMBERS.length)];
+};
+
+const generateOddNumbers = () => {
+  return ODD_NUMBERS[Math.floor(Math.random() * ODD_NUMBERS.length)];
+};
+
+const generateEvenNumbers = () => {
+  return EVEN_NUMBERS[Math.floor(Math.random() * EVEN_NUMBERS.length)];
+};
+
 const fixedFruitsData = [
-  {
-    type: "prime",
-    top: 10,
-    left: 20,
-  },
-  {
-    type: "even",
-    top: 40,
-    left: 20,
-  },
-  {
-    type: "odd",
-    top: 60,
-    left: 20,
-  },
+  { index: 1, type: "number", categ: "prime", top: 10, left: 20 },
+  { index: 2, type: "number", categ: "even", top: 40, left: 20 },
+  { index: 3, type: "number", categ: "odd", top: 60, left: 30 },
+  { index: 4, type: "number", categ: "prime", top: 80, left: 40 },
+  { index: 5, type: "number", categ: "prime", top: 30, left: 70 },
+  { index: 6, type: "number", categ: "odd", top: 40, left: 60 },
+  { index: 7, type: "number", categ: "odd", top: 70, left: 10 },
+  { index: 8, type: "number", categ: "even", top: 80, left: 20 },
+  { index: 9, type: "number", categ: "odd", top: 50, left: 60 },
+  { index: 10, type: "number", categ: "odd", top: 70, left: 60 },
+  { index: 11, type: "number", categ: "prime", top: 40, left: 30 },
+  { index: 12, type: "number", categ: "even", top: 80, left: 80 },
+  { index: 13, type: "number", categ: "prime", top: 20, left: 70 },
+  { index: 14, type: "number", categ: "odd", top: 80, left: 75 },
+  { index: 15, type: "number", categ: "prime", top: 70, left: 50 },
+  { index: 16, type: "number", categ: "even", top: 10, left: 10 },
+  { index: 17, type: "number", categ: "prime", top: 40, left: 90 },
+  { index: 18, type: "number", categ: "odd", top: 10, left: 85 },
+  { index: 19, type: "number", categ: "prime", top: 70, left: 90 },
+  { index: 20, type: "number", categ: "odd", top: 30, left: 40 },
+  { index: 21, type: "number", categ: "prime", top: 10, left: 40 },
+  { index: 22, type: "number", categ: "even", top: 40, left: 40 },
 ];
 
 const initiaPlayerPosition = [
@@ -86,31 +119,30 @@ const initiaPlayerPosition = [
   },
 ];
 
-const FRUIT_GENERATION_TIME = 2000;
-const FULL_GAME_TIME = 30000;
+const fruitsData = {};
 
-const getUniquePosition = (participantsData) => {
-  for (let { top: Top, left: Left } of initiaPlayerPosition) {
-    for (let { top, left } of participantsData) {
-      if (Top !== top && Left !== left) {
-        return { top, left };
-      }
-    }
-  }
-};
+const FRUIT_GENERATION_TIME = 2000;
+const FULL_GAME_TIME = 3 * 60 * 1000;
+
 
 const generateNewFruits = (currentFruits) => {
   let newFruitData = [];
-  for (let { top: Top, left: Left } of fixedFruitsData) {
+  console.log("trying to generate new fruits");
+  let flag = true;
+  for (let fixedFruit of fixedFruitsData) {
+    flag = true;
     for (let fruit of currentFruits) {
-      if (Top !== fruit.top && Left !== fruit.left) {
-        newFruitData.push(fruit);
+      if (fixedFruit.top == fruit.top && fixedFruit.left == fruit.left) {
+        flag = false;
       }
     }
+    if (flag) newFruitData.push(fixedFruit);
   }
 
+  if (newFruitData.length === 0) return -1;
+
   const randInd = Math.floor(Math.random() * newFruitData.length);
-  return fixedFruitsData[randInd];
+  return newFruitData[randInd];
 };
 
 const randomPosition = () => {
@@ -151,8 +183,6 @@ io.on("connection", (socket) => {
         }
       }
 
-      console.log(peopleReady);
-
       if (peopleReady === allRoomData[roomName].roomLimit) {
         allRoomData[roomName].gameHasStarted = true;
         io.in(roomName).emit("start-game-response", {
@@ -161,17 +191,28 @@ io.on("connection", (socket) => {
           players: allRoomData[roomName],
         });
 
+        fruitsData[roomName] = [];
 
         const intervalId = setInterval(() => {
-          const randomFruit = generateNewFruits(allRoomData[roomName].fruitsData)
-          if(randomFruit == -1) return;
-          allRoomData[roomName].fruitsData.push(randomFruit)
-          io.to(roomName).emit("get-fruit", allRoomData[roomName]);
+          const randomFruit = generateNewFruits(fruitsData[roomName]);
+          if (randomFruit == -1) return;
+          switch (randomFruit.categ) {
+            case "prime":
+              randomFruit.val = generatePrimeNumbers();
+              break;
+            case "even":
+              randomFruit.val = generateEvenNumbers();
+              break;
+            case "odd":
+              randomFruit.val = generateOddNumbers();
+              break;
+          }
+          fruitsData[roomName].push(randomFruit);
+          io.to(roomName).emit("get-fruit", fruitsData[roomName]);
         }, FRUIT_GENERATION_TIME);
 
-        
         setTimeout(() => {
-          clearInterval(intervalId); 
+          clearInterval(intervalId);
         }, FULL_GAME_TIME);
 
         return;
@@ -193,8 +234,14 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("delete-fruit", ({ roomName, index }) => {
+    console.log(index);
+    const newFruitsData = fruitsData[roomName].filter((f) => f.index !== index);
+    fruitsData[roomName] = newFruitsData;
+    io.to(roomName).emit("delete-fruit-index", index);
+  });
+
   socket.on("send-room-data", ({ currentPlayer, roomName }) => {
-    console.log("inside send-room-data");
     if (!allRoomData[roomName]) return;
     if (!currentPlayer) return;
     const currentPlayerInd = allRoomData[roomName].participants.findIndex(
@@ -204,19 +251,12 @@ io.on("connection", (socket) => {
     );
 
     allRoomData[roomName].participants[currentPlayerInd] = currentPlayer;
-    console.log(allRoomData[roomName]);
-    socket.to(roomName).emit("get-room-data", allRoomData[roomName]);
-  });
 
-  socket.on("get-player-data", (players) => {
-    console.log(players);
+    socket.to(roomName).emit("get-room-data", allRoomData[roomName]);
   });
 
   socket.on("join-room", ({ roomName, username }) => {
     const roomLimit = allRoomData[roomName]?.roomLimit;
-
-    console.log("inside join room");
-    console.log(allRoomData[roomName]);
 
     if (!allRoomData[roomName]) {
       socket.emit("join-room-response", {
@@ -226,6 +266,16 @@ io.on("connection", (socket) => {
       console.log("!room doesn't exist ");
       return;
     }
+
+    doesPlayersAlreadyExist = allRoomData[roomName].participants.some((p) => {
+      p.playerId === socket.id;
+    });
+
+    if(doesPlayersAlreadyExist){
+      console.log('player already exist in the room')
+      return;
+    }
+
     if (allRoomData[roomName]?.participants.length === roomLimit) {
       socket.emit("join-room-response", {
         status: 200,
@@ -255,8 +305,6 @@ io.on("connection", (socket) => {
       startGame: false,
       points: 0,
     });
-    console.log(allRoomData);
-    console.log(allRoomData[roomName]);
 
     socket.join(roomName);
     console.log("user is indeed joining room, now emitting on get-room-dasta ");
@@ -281,7 +329,6 @@ io.on("connection", (socket) => {
       });
 
       console.log("client joined the room");
-      console.log(allRoomData[roomName]);
       socket.emit("create-room-response", "success");
     } catch (error) {
       socket.emit("create-room-response", "failed");
@@ -299,6 +346,7 @@ io.on("connection", (socket) => {
       if (ind >= 0) {
         allRoomData[key].participants.splice(ind, 1);
         console.log("succesfully deleted the socket from the room");
+        delete fruitsData[key];
       }
     }
 

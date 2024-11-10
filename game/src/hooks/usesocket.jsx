@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-import { constSelector, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { io } from "socket.io-client";
-import { fruitsDataAtom, isRoomInvalidAtom, playersAtom, socketIdAtom } from "../store/atoms";
+import { activeRoomAtom, fruitsDataAtom, gameHasEndedAtom, isRoomInvalidAtom, playersAtom, socketIdAtom, startGameAtom, timeRemGameAtom } from "../store/atoms";
+import { fruitArr } from "../Data/data";
 
 
 let socket = null;
@@ -10,38 +11,35 @@ const useSocket = () => {
     const setIsRoomInvalid = useSetRecoilState(isRoomInvalidAtom)
     const setPlayers = useSetRecoilState(playersAtom)
     const setFruitsData = useSetRecoilState(fruitsDataAtom)
+    const setActiveRoom = useSetRecoilState(activeRoomAtom)
+    const setStartGame = useSetRecoilState(startGameAtom)
+    const setTimeRemGame = useSetRecoilState(timeRemGameAtom)
+    const setGameHasEnded = useSetRecoilState(gameHasEndedAtom)
 
     useEffect(() => {
 
         if (!socket) {
-            socket = io("localhost:3000");
+            socket = io("https://midblade.onrender.com");
         }
     }, [socket])
 
     const connectSocket = () => {
-        console.log("first")
+
         if (socket) {
-            console.log("second")
+
             socket.on("connect", () => {
                 console.log("connected to ws server successfully", socket)
                 setSocketId(socket.id)
+                clearAllStates()
+
             })
         }
     }
 
     const joinRoom = (roomName, username) => {
+        console.log("sending to join-room")
         socket.emit("join-room", { roomName, username })
     }
-
-    const generateFruit = (roomName) => {
-        if (socket) {
-            console.log("emitting for fruit generation")
-            socket.emit("fruit-generation", roomName)
-            socket.on("fruit-generation-response", data => setFruitsData(data))
-        }
-    }
-
-
 
     const startGame = (roomName) => {
         socket.emit("start-game", roomName)
@@ -52,12 +50,33 @@ const useSocket = () => {
                 console.log(data.players)
             }
         })
+        socket.on("get-fruit", data => {
+            const newFruit = data[data.length - 1];
+            if (!newFruit.img)
+                newFruit.img = fruitArr[Math.floor(Math.random() * fruitArr.length)];
+            setFruitsData(prev => {
+                const arr = [...prev];
+                const lastInd = arr.length - 1;
+                if (arr.length > 0) {
+                    if (newFruit.top === arr[lastInd].top && newFruit.left === arr[lastInd].left) {
+                        return prev;
+                    }
+                }
+                return [...prev, newFruit]
+            })
+
+        })
+        socket.on("delete-fruit-index", index => {
+            setFruitsData(prev => {
+                const newFruitData = prev.filter(f => f.index !== index)
+                return newFruitData;
+            })
+        })
     }
 
     const checkRoomAvailibility = () => {
 
         socket.on("join-room-response", response => {
-            console.log(response)
             setIsRoomInvalid(response.msg)
         })
     }
@@ -69,6 +88,22 @@ const useSocket = () => {
         }
     }
 
+    const deleteFruit = (roomName, index) => {
+        if (socket) {
+            socket.emit("delete-fruit", { roomName, index })
+        }
+    }
+
+    const clearAllStates = () => {
+        setPlayers(null)
+        setIsRoomInvalid(null)
+        setActiveRoom(null)
+        setFruitsData([])
+        setStartGame(false)
+        setTimeRemGame(3*60*1000)
+        setGameHasEnded(false)
+
+    }
     const getRoomData = (setPlayers, setCurrentPlayer, currentPlayer, setDoesRoomExist) => {
 
         if (socket) {
@@ -78,11 +113,7 @@ const useSocket = () => {
                     setDoesRoomExist(false);
                     return;
                 }
-                // console.log(roomData)
-                // console.log("socket.id=", socket.id);
-                // console.log("roomData.playerId=", roomData.playerId)
 
-                // if (roomData.playerId === socket.id) return;
                 setPlayers(roomData)
 
                 if (!currentPlayer) {
@@ -98,7 +129,7 @@ const useSocket = () => {
         }
     }
 
-    const sendRoomData = (players, currentPlayer, roomName) => {
+    const sendRoomData = (currentPlayer, roomName) => {
         if (socket) {
 
             socket.emit("send-room-data", { currentPlayer, roomName })
@@ -113,7 +144,8 @@ const useSocket = () => {
         sendRoomData,
         joinRoom,
         startGame,
-        generateFruit
+        deleteFruit,
+        clearAllStates
     }
 
 }

@@ -1,9 +1,9 @@
-import { grassImg, stoneImg, magicItemImg, healthPotionImg, mushroomImg, treeImg } from "../Data/data"
+import { grassImg, stoneImg, mushroomImg, treeImg, fruitArr } from "../Data/data"
 import { OBSTACLE_POSITION } from "../Data/data"
 import { motion } from "framer-motion"
 const Obstacle = ({ obstaclesData }) => {
     let imgToRender;
-    
+
     switch (obstaclesData.type) {
         case "stone":
             imgToRender = stoneImg;
@@ -11,20 +11,14 @@ const Obstacle = ({ obstaclesData }) => {
         case 'grass':
             imgToRender = grassImg;
             break;
-        case "health":
-            imgToRender = healthPotionImg;
-            break;
-        case "mana":
-            imgToRender = magicItemImg;
-            break;
         case "tree":
             imgToRender = treeImg;
             break;
         case "mushroom":
             imgToRender = mushroomImg;
             break;
-        default: 
-            imgToRender = mushroomImg;
+        default:
+            imgToRender = null
     }
 
     return (
@@ -37,7 +31,15 @@ const Obstacle = ({ obstaclesData }) => {
                 left: obstaclesData.left + "%",
             }}
             className={` w-20 h-20 absolute z-0`} >
-            <img src={imgToRender} />
+            {imgToRender ? <img 
+            
+            src={imgToRender} /> : <div className=" w-full h-full relative" >
+                <img 
+                className="absolute w-full h-full"
+                src={obstaclesData.img}></img >
+                <p className="absolute text-2xl font-bold left-1/2 translate-x-[-50%] top-1/2 translate-y-[-50%]" >{obstaclesData.val}</p>
+            </div>
+            }
         </motion.div>
 
     )
