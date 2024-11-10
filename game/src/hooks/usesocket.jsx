@@ -14,7 +14,7 @@ const useSocket = () => {
     useEffect(() => {
 
         if (!socket) {
-            socket = io("https://midblade.onrender.com");
+            socket = io("localhost:3000");
         }
     }, [socket])
 
@@ -62,14 +62,6 @@ const useSocket = () => {
         })
     }
 
-    const checkRoomCreation = (setRoomCreationLoading) => {
-        if (socket) {
-            socket.on("create-room-response", response => {
-                setRoomCreationLoading(s => ({ response, loading: false }))
-
-            })
-        }
-    }
 
     const createRoom = (roomName, roomLimit, username) => {
         if (socket) {

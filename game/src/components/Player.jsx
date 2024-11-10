@@ -221,7 +221,7 @@ const EachPlayer = ({ player }) => {
 
   return (<div
 
-    style={{ top: `${player.top}%`, left: `${player.left}%` }}
+    style={{ top: `${player.top}%`, left: `${player.left}%` , zIndex: 10}}
     className="image-container"
   >
     {/* <PlayerBar val={player.healthBar} type="health" />

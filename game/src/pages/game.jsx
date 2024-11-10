@@ -44,7 +44,6 @@ export default function GamePage() {
     const socketId = useRecoilValue(socketIdAtom)
     const [activeRoom, setActiveRoom] = useRecoilState(activeRoomAtom)
     const [doesRoomExist, setDoesRoomExist] = useState(true)
-    const [showToast, setShowToast] = useState(false)
     const [startGame, setStartGame] = useState(false)
     const [showSetting, setShowSetting] = useState(false)
 
