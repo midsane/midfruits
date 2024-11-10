@@ -7,7 +7,7 @@ const GameArena = ({ children }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="relative w-full h-screen bg-gradient-to-br from-green-300 via-green-400 to-emerald-400 overflow-hidden"
+      className="relative w-full h-screen bg-gradient-to-br from-green-300 via-green-400 to-emerald-400 overflow-x-hidden"
     >
 
       <div className="absolute inset-0 bg-grid opacity-20"></div>

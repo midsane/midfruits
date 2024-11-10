@@ -125,7 +125,7 @@ export default function GamePage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="w-fit flex flex-col text-xl gap-6 p-20 h-fit bg-pink-300 rounded-lg fixed z-10 translate-x-[-50%] left-1/2 top-1/2 translate-y-[-50%]" >
+                        className="w-fit flex flex-col text-xl gap-6 p-20 h-fit bg-pink-300 rounded-lg fixed z-20 translate-x-[-50%] left-1/2 top-1/2 translate-y-[-50%]" >
                         <p>{isRoomInvalid}</p>
                         <Link to="/" ><button className="rounded-full hover:scale-105 active:scale-95 duration-75 ease-linear bg-amber-300 p-2 " >Go to Home Page...</button></Link>
                     </motion.div>}</AnimatePresence>
@@ -164,8 +164,12 @@ const SettingIcons = ({ setShowSetting }) => {
 const LeaderBoard = () => {
     const gameEndedsongRef = useRef()
     const players = useRecoilValue(playersAtom)
+    const currentPlayer = useRecoilValue(currentPlayerAtom)
     const playersClone = structuredClone(players)
 
+    const cpInd = playersClone.participants.findIndex(p => p.playerId === currentPlayer.playerId)
+
+    playersClone.participants[cpInd] = currentPlayer;
     gameEndedsongRef.current = new Audio("/assets/game-end.mp3")
     gameEndedsongRef.current.volume = 0.3
 

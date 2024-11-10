@@ -98,7 +98,7 @@ const useSocket = () => {
         setActiveRoom(null)
         setFruitsData([])
         setStartGame(false)
-        setTimeRemGame(3 * 60 * 1000)
+        setTimeRemGame(3*60*1000)
         setGameHasEnded(false)
 
     }
