@@ -217,7 +217,7 @@ const GameCounter = () => {
     useEffect(() => {
         const gameClockInterval = setInterval(() => {
 
-            if (timeRemGame < 0) {
+            if (timeRemGame <= 0) {
 
                 setGameHasEnded(true)
             }
