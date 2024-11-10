@@ -5,7 +5,7 @@ const httpServer = createServer();
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://midfruits.vercel.app/",
+    origin: "*",
   },
 });
 
