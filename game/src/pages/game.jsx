@@ -29,7 +29,7 @@ import { PlayerBar } from "../components/playerBar";
 import { MidFruitLoading } from "../components/Loading";
 import { Title } from "../components/title";
 import { MobileView } from "./mobile";
-import { DoorOpen, Award } from "lucide-react"
+import { DoorOpen, Award, Clock } from "lucide-react"
 
 
 export default function GamePage() {
@@ -247,8 +247,9 @@ const GameCounter = () => {
 
 
 
-    return (createPortal(<div className="rounded text-3xl bg-white text-emerald-500 p-2 w-fit z-50 fixed top-4 left-1/2 translate-x-[-50%]" >
-        {minutes + " : " + seconds}
+    return (createPortal(<div className="rounded text-3xl bg-white text-emerald-500 p-2 w-fit z-50 fixed top-4 left-1/2 translate-x-[-50%] flex justify-center items-center gap-2 " >
+        <div><Clock size={35} /></div>
+        <div> {minutes + " : " + seconds}</div>
     </div>, document.body))
 
 }
