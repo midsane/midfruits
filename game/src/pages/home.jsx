@@ -211,7 +211,7 @@ const Button = ({ content }) => {
                         content={"Create Room"}
                     /> : <div className="flex justify-between" >
                         <ModalButton handleClick={() => navigate("/room/" + roomnameRef.current.value)} content="Join Room" />
-                        <ModalButton handleClick={() => copyToClipboard("https://midblade.vercel.app/room/" + roomnameRef.current.value)} content="Invite Friends" />
+                        <ModalButton handleClick={() => copyToClipboard("https://midfruits.vercel.app/room/" + roomnameRef.current.value)} content="Invite Friends" />
                     </div>
                 }</ModalMid> :
                 (showModal === "join" ? <ModalMid>
