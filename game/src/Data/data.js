@@ -11,7 +11,7 @@ import enemyimg2 from "../assets/enemy2-removebg-preview.png";
 import enemyimg3 from "../assets/enemy3-removebg-preview.png";
 import enemyimg4 from "../assets/enemy4-removebg-preview.png";
 
-import grassImg from "../assets/grass__1_-removebg-preview.png";
+import grassImg from "../assets/grass-removebg-preview.png";
 import stoneImg from "../assets/stone__1_-removebg-preview.png";
 
 import sword2 from "../assets/sword2-removebg-preview.png";

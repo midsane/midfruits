@@ -28,7 +28,7 @@ const Player = () => {
 
   useEffect(() => {
     pointsGainSoundRef.current = new Audio("/assets/elizabeth_sound.mp3")
-    pointsLoseSoundRef.current = new Audio("/assets/windows_xp_error.mp3")
+    pointsLoseSoundRef.current = new Audio("/assets/hit-by-a-wood-230542.mp3")
   }, [])
 
   useEffect(() => {
