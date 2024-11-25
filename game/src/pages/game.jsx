@@ -69,14 +69,6 @@ export default function GamePage() {
         return () => window.removeEventListener('resize', checkScreenSize)
     }, [])
 
-    const setGameHasEnded = useSetRecoilState(gameHasEndedAtom)
-    useEffect(() => {
-        setTimeout(() => {
-            setGameHasEnded(true)
-        }, 3000);
-    }, [])
-
-
     if (gameHasEnded) {
         navigate("leaderboards")
     }
