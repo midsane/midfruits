@@ -7,12 +7,13 @@ import { isRoomInvalidAtom, usernameAtom } from "../store/atoms";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { Background } from "../components/Background";
 import { MobileView } from "./mobile";
+import { Music } from "../components/Music"
 export const Root = ({ children }) => {
     const [username, setUsername] = useRecoilState(usernameAtom)
     const navigate = useNavigate()
     const usernameRef = useRef()
     const setIsRoomInvalid = useSetRecoilState(isRoomInvalidAtom)
-
+    const [introPlaying, setIntroPlaying] = useState(false)
     const [isSmallScreen, setIsSmallScreen] = useState(false)
 
     useEffect(() => {
@@ -41,17 +42,29 @@ export const Root = ({ children }) => {
         }
         setUsername(usernameRef.current.value)
         setTimeout(() => {
-            painSound.play()
+            setIntroPlaying(true)
         }, 1000);
         navigate("home")
 
     }
 
-    const painSound = new Audio("/assets/deadpoolsound.mp3")
 
     return (isSmallScreen ? <MobileView /> :
         <Background>
             <Title />
+            <AnimatePresence>
+                {introPlaying && <motion.div
+                    initial={{ y: -10, opacity: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
+                >
+                    <Music
+                        volume={0.5}
+                        loop = {false}
+                        initialVal={true}
+                        audioval="perfected-judgement-knights-of-thunder-saiki-kusuo-no-nan-amv" />
+                </motion.div>}
+               
+            </AnimatePresence>
             <AnimatePresence>
                 {username === "" && <motion.div
                     initial={{ opacity: 0 }}
@@ -72,3 +85,4 @@ export const Root = ({ children }) => {
 
     );
 }
+

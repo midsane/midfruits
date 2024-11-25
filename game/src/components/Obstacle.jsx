@@ -1,4 +1,4 @@
-import { grassImg, stoneImg, mushroomImg, treeImg, fruitArr } from "../Data/data"
+import { grassImg, stoneImg, mushroomImg, treeImg, fireImg } from "../Data/data"
 import { OBSTACLE_POSITION } from "../Data/data"
 import { motion } from "framer-motion"
 const Obstacle = ({ obstaclesData }) => {
@@ -16,6 +16,9 @@ const Obstacle = ({ obstaclesData }) => {
             break;
         case "mushroom":
             imgToRender = mushroomImg;
+            break;
+        case "fire":
+            imgToRender = fireImg
             break;
         default:
             imgToRender = null

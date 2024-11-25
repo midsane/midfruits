@@ -24,11 +24,13 @@ const Player = () => {
   const fruitsDataRef = useRef(fruitsData);
 
   const pointsGainSoundRef = useRef()
-  const pointsLoseSoundRef = useRef()
+  const pointsLoseEvenSoundRef = useRef()
+  const pointsLoseOddSoundRef = useRef()
 
   useEffect(() => {
     pointsGainSoundRef.current = new Audio("/assets/elizabeth_sound.mp3")
-    pointsLoseSoundRef.current = new Audio("/assets/hit-by-a-wood-230542.mp3")
+    pointsLoseEvenSoundRef.current = new Audio("/assets/saiki-yare-yare-ringtone.mp3")
+    pointsLoseOddSoundRef.current = new Audio("/assets/hit-by-a-wood-230542.mp3")
   }, [])
 
   useEffect(() => {
@@ -48,10 +50,10 @@ const Player = () => {
             pointsGainSoundRef.current.play()
             return { index: fruit.index, worth: PRIME_POINTS }
           case "even":
-            pointsLoseSoundRef.current.play()
+            pointsLoseEvenSoundRef.current.play()
             return { index: fruit.index, worth: EVEN_POINTS }
           case "odd":
-            pointsLoseSoundRef.current.play()
+            pointsLoseOddSoundRef.current.play()
             return { index: fruit.index, worth: ODD_POINTS }
         }
       }
