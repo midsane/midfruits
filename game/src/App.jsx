@@ -5,6 +5,7 @@ import "./App.css"
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Root } from "./pages/root"
 import { RecoilRoot } from "recoil";
+import { LeaderBoardPage } from "./pages/leaderboards";
 
 
 const router = createBrowserRouter([
@@ -18,6 +19,9 @@ const router = createBrowserRouter([
   },
   {
     path: "/room/:gameId", element: <GamePage />
+  },
+  {
+    path: "/room/:gameId/leaderboards", element: <LeaderBoardPage />
   }
 
 ])

@@ -18,7 +18,7 @@ import {
     timeRemGameAtom,
     usernameAtom
 } from "../store/atoms";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toast } from "../components/Toast";
@@ -37,6 +37,7 @@ export default function GamePage() {
     const [currentPlayer, setCurrentPlayer] = useRecoilState(currentPlayerAtom)
     const [username, setUsername] = useRecoilState(usernameAtom)
     const isRoomInvalid = useRecoilValue(isRoomInvalidAtom)
+    const navigate = useNavigate()
 
     const {
         getRoomData,
@@ -48,11 +49,12 @@ export default function GamePage() {
     const usernameRef = useRef()
     const { gameId } = useParams()
     const socketId = useRecoilValue(socketIdAtom)
-    const [activeRoom, setActiveRoom] = useRecoilState(activeRoomAtom)
+    const setActiveRoom = useSetRecoilState(activeRoomAtom)
+
     const [doesRoomExist, setDoesRoomExist] = useState(true)
     const [startGame, setStartGame] = useRecoilState(startGameAtom)
     const [showSetting, setShowSetting] = useState(false)
-    const [gameHasEnded, setGameHasEnded] = useRecoilState(gameHasEndedAtom)
+    const gameHasEnded = useRecoilValue(gameHasEndedAtom)
 
     const [isSmallScreen, setIsSmallScreen] = useState(false)
 
@@ -67,7 +69,17 @@ export default function GamePage() {
         return () => window.removeEventListener('resize', checkScreenSize)
     }, [])
 
+    const setGameHasEnded = useSetRecoilState(gameHasEndedAtom)
+    useEffect(() => {
+        setTimeout(() => {
+            setGameHasEnded(true)
+        }, 3000);
+    }, [])
 
+
+    if (gameHasEnded) {
+        navigate("leaderboards")
+    }
 
     const handleClick = () => {
 
@@ -134,9 +146,6 @@ export default function GamePage() {
                             <AnimatePresence>
                                 {!startGame && <StartGamePanel players={players} />}
                             </AnimatePresence>
-                            <AnimatePresence>
-                                {gameHasEnded && <LeaderBoard />}
-                            </AnimatePresence>
                             <Player />
                             <Music />
                             <ObstaclePosition />
@@ -161,62 +170,10 @@ const SettingIcons = ({ setShowSetting }) => {
     </motion.div>, document.body))
 }
 
-const LeaderBoard = () => {
-    const gameEndedsongRef = useRef()
-    const players = useRecoilValue(playersAtom)
-    const currentPlayer = useRecoilValue(currentPlayerAtom)
-    const playersClone = structuredClone(players)
-
-    const cpInd = playersClone.participants.findIndex(p => p.playerId === currentPlayer.playerId)
-
-    playersClone.participants[cpInd] = currentPlayer;
-    gameEndedsongRef.current = new Audio("/assets/game-end.mp3")
-    gameEndedsongRef.current.volume = 0.3
-
-    useEffect(() => {
-
-        gameEndedsongRef.current.play();
-
-        return () => {
-            gameEndedsongRef.current.pause();
-            gameEndedsongRef.current.currentTime = 0;
-        }
-    }, [])
-
-    const sortAccToPoints = (arr) => {
-
-        return arr.sort((a, b) => b.points - a.points);
-    }
-    const sortedPoints = sortAccToPoints(playersClone.participants)
-
-    return (createPortal(
-        <div className="bg-green-200 flex flex-col gap-10 items-center justify-center w-fit 
-        h-fit px-20 py-10 text-2xl rounded-lg left-1/2 fixed z-10  top-1/2 translate-x-[-50%] translate-y-[-50%]" >
-            <Title />
-            {sortedPoints.map((p, i) =>
-
-                <div
-                    key={i}
-                    className="flex justify-between gap-10 w-96" >
-                    <span className="flex gap-2" >
-                        <h2>{i + 1}.</h2>
-                        <Award size={40} />
-                    </span>
-                    <h2>{p.playerName.slice(0, 8) + "..."}</h2>
-                    <h2>{p.points} points</h2>
-                </div>
-
-            )}
-            <Link to='/' >
-                <button className="py-4 px-10 rounded-full bg-amber-200 hover:bg-amber-300 active:scale-95 hover:scale-105 duration-75 " >Go to HomePage</button>
-            </Link>
-        </div>
-        , document.body))
-}
 
 const GameCounter = () => {
     const [timeRemGame, setTimeRemGame] = useRecoilState(timeRemGameAtom)
-    const [gameHasEnded, setGameHasEnded] = useRecoilState(gameHasEndedAtom)
+    const setGameHasEnded = useSetRecoilState(gameHasEndedAtom)
 
     useEffect(() => {
         const gameClockInterval = setInterval(() => {
