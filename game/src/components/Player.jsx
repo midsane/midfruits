@@ -110,12 +110,9 @@ const Player = () => {
         const collisionWithFruit = checkCollisionWithFruits(currentPlayerState)
 
         if (collisionWithFruit) {
-          console.log("cps first",currentPlayerState.points)
+          
 
           currentPlayerState.points += collisionWithFruit.worth;
-          console.log("cwf worth",collisionWithFruit.worth)
-          console.log("cps second",currentPlayerState.points)
-
           deleteFruit(activeRoom, collisionWithFruit.index)
         }
 

@@ -27,9 +27,8 @@ import { Background } from "../components/Background";
 import { createPortal } from "react-dom";
 import { PlayerBar } from "../components/playerBar";
 import { MidFruitLoading } from "../components/Loading";
-import { Title } from "../components/title";
 import { MobileView } from "./mobile";
-import { DoorOpen, Award, Clock } from "lucide-react"
+import { DoorOpen, Clock } from "lucide-react"
 
 
 export default function GamePage() {
@@ -283,11 +282,10 @@ const LivePoints = ({ p }) => {
 
 const GameRoomBtn = ({ content, onClick, startGame = false, svg = false }) => {
     const { startGame: startGm } = useSocket()
-    const setPlayers = useSetRecoilState(playersAtom)
     const activeRoom = useRecoilValue(activeRoomAtom)
     useEffect(() => {
         if (startGame)
-            startGm(activeRoom, setPlayers)
+            startGm(activeRoom)
     }, [activeRoom, startGame])
     return (<div
         disabled={startGame}
