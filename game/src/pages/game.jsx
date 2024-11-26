@@ -54,7 +54,7 @@ export default function GamePage() {
     const [startGame, setStartGame] = useRecoilState(startGameAtom)
     const [showSetting, setShowSetting] = useState(false)
     const gameHasEnded = useRecoilValue(gameHasEndedAtom)
-
+    const [showToast, setShowToast] = useState(false)
     const [isSmallScreen, setIsSmallScreen] = useState(false)
 
     useEffect(() => {
@@ -75,7 +75,7 @@ export default function GamePage() {
     const handleClick = () => {
 
         if (usernameRef.current.value === "") {
-
+            setShowToast(true)
             return
         }
         setUsername(usernameRef.current.value)
@@ -112,17 +112,16 @@ export default function GamePage() {
 
 
     if (askUser) {
-        return <>
+        return <Background>
+            {showToast && <Toast showToast={showToast} setShowToast={setShowToast} msg="Please enter a valid name!" />}
             {!doesRoomExist && <Toast setShowToast={setDoesRoomExist} showToast={doesRoomExist} msg="room does not exist" />}
-            <div className="w-screen h-screen relative z-[20] bg-pink-200" ></div>
-            <div className="bg-red-200 border-2 border-pink-300  w-fit z-[100] translate-x-[-50%] translate-y-[-50%] fixed top-0 left-1/2 flex flex-col my-96 text-xl p-10 m-auto rounded" ><input ref={usernameRef} placeholder="username" />
-                <button onClick={handleClick} className="hover:scale-105 active:scale-95 bg-yellow-200" >ok</button>
-            </div></>
+               <MiniModal usernameRef={usernameRef} handleClick={handleClick} />
+            </Background>
     }
     else {
         return (<>
             {isSmallScreen ? <MobileView /> :
-                <Background>
+                <div>
                     {!doesRoomExist && <Toast setShowToast={setDoesRoomExist} showToast={doesRoomExist} msg="room does not exist" />}
                     <AnimatePresence>{isRoomInvalid && <motion.div
                         initial={{ opacity: 0 }}
@@ -148,10 +147,19 @@ export default function GamePage() {
                             </AnimatePresence>
                         </GameArena>
 
-                    }</Background>}
+                    }</div>}
         </>)
     }
 
+}
+
+const MiniModal = ({usernameRef, handleClick}) => {
+    return createPortal(
+        <div className="bg-red-200 border-2 border-pink-300 w-fit z-[100] translate-x-[-50%] translate-y-[-50%] fixed top-1/2 left-1/2 flex flex-col text-xl p-10 rounded" >
+            <input ref={usernameRef} placeholder="username" />
+            <button onClick={handleClick} className="hover:scale-105 active:scale-95 bg-yellow-200" >ok</button>
+        </div>, 
+    document.querySelector("body"))
 }
 
 const SettingIcons = ({ setShowSetting }) => {
