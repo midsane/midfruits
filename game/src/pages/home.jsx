@@ -82,7 +82,7 @@ const PlayGame = () => {
     return (<div
         className="flex justify-center items-center gap-10 text-md flex-col pixelify-sans  bg-yellow-200 w-fit h-fit px-16 py-14 rounded-lg fixed top-52 left-1/2 translate-x-[-50%]" >
 
-        {["Join a Room", "Create Room"].map((content, ind) => <Button content={content} key={ind} />)}
+        {["Play Solo","Join a Room", "Create Room"].map((content, ind) => <Button content={content} key={ind} />)}
 
     </div>)
 }
@@ -104,6 +104,10 @@ const Button = ({ content }) => {
                 break;
             case "Join a Room":
                 setShowModal("join")
+                break;
+            case "Play Solo":
+                playSolo();
+                setShowLoading(true);
                 break;
         }
     }
@@ -145,7 +149,7 @@ const Button = ({ content }) => {
         }
     }
 
-    const handleClickRoomCreation = () => {
+    const handleClickRoomCreation = (type="multi") => {
 
 
         if (roomnameRef.current && roomnameRef.current.value === "") { 
@@ -153,11 +157,24 @@ const Button = ({ content }) => {
             setShowToast(true)
             return;
         }
-
+        
         createRoom(roomnameRef.current.value, roomLimit, username)
         setRoomLink("room/" + roomnameRef.current.value)
         setActiveRoom(roomnameRef.current.val)
+        if(type === "solo"){
+            navigate(`../room/${roomnameRef.current.value}`)
+        }
 
+    }
+
+    const [showLoading, setShowLoading] = useState(false)
+
+    const playSolo = () => {
+        setShowLoading(true)
+        const uuid = crypto.randomUUID().substring(0,8)
+        roomnameRef.current = {value: uuid}
+        
+        handleClickRoomCreation("solo")
     }
 
     const roomnameRef = useRef()
@@ -189,7 +206,7 @@ const Button = ({ content }) => {
 
     return (<div className="flex gap-10 justify-center items-center" >
         {ButtonSvg}
-        <button onClick={() => { handleBtnBro(content) }} className="bg-pink-300 px-10 active:scale-95 hover:scale-105 w-52 duration-75 ease-linear h-fit py-3 rounded-full" >{content}</button>
+        <button onClick={() => { handleBtnBro(content) }} className="bg-pink-300 px-10 active:scale-95 hover:scale-105 w-52 duration-75 ease-linear h-fit py-3 rounded-full" >{content==="Play Solo" && showLoading ? "starting game..." : content}</button>
     
         {showToast && <Toast showToast={showToast} setShowToast={setShowToast} msg={toastVal} />}
         <AnimatePresence>
