@@ -29,7 +29,7 @@ const Music = ({ audioval = "audio", initialVal=false, loop=true, volume=1 }) =>
    
     return (<motion.div
         onClick={audioval != "" ? handleMusic : handlesoundeffect}
-        className="w-fit h-fit p-2 rounded fixed z-[100] top-5 left-10 cursor-pointer bg-pink-300" >
+        className="w-fit h-fit p-2 rounded fixed border border-pink-100 active:scale-95  z-[100] top-5 left-10 cursor-pointer bg-pink-300" >
         {audioPlaying? <Volume1 /> : <VolumeOff />}
     </motion.div>)
 }

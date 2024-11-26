@@ -88,13 +88,13 @@ const PlayGame = () => {
 }
 
 const Button = ({ content }) => {
-    const [showToast, setShowToast] = useState(false)
-    const [toastVal, setToastVal] = useState("")
+  
     let ButtonSvg = <></>
     const [showModal, setShowModal] = useState("")
     const navigate = useNavigate()
     const {createRoom} = useSocket()
-    
+    const [showToast, setShowToast] = useState(false)
+    const [toastVal, setToastVal] = useState("")
     
     const handleBtnBro = (content) => {
         
@@ -125,6 +125,8 @@ const Button = ({ content }) => {
     const [roomLimit, setRoomLimit] = useState(1)
     const [roomLink, setRoomLink] = useState("")
     const setActiveRoom = useSetRecoilState(activeRoomAtom)
+    
+
     const changeRoomLimit = (sign) => {
         switch (sign) {
             case "plus":
@@ -146,8 +148,9 @@ const Button = ({ content }) => {
     const handleClickRoomCreation = () => {
 
 
-        if (roomnameRef.current && roomnameRef.current.value === "") {
-          
+        if (roomnameRef.current && roomnameRef.current.value === "") { 
+            setToastVal("Room name cannot be empty!")
+            setShowToast(true)
             return;
         }
 
@@ -187,8 +190,8 @@ const Button = ({ content }) => {
     return (<div className="flex gap-10 justify-center items-center" >
         {ButtonSvg}
         <button onClick={() => { handleBtnBro(content) }} className="bg-pink-300 px-10 active:scale-95 hover:scale-105 w-52 duration-75 ease-linear h-fit py-3 rounded-full" >{content}</button>
-        <Toast setShowToast={setShowToast} showToast={showToast} msg={toastVal} />
-
+    
+        {showToast && <Toast showToast={showToast} setShowToast={setShowToast} msg={toastVal} />}
         <AnimatePresence>
             {showModal == "create" ? <ModalMid>
                 <h2 >Create a Room!</h2>
