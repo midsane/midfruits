@@ -132,7 +132,7 @@ const OBSTACLE_POSITION = [
 const SPEED = 1;
 
 const playerMoves = [img1, img4, img5, img6];
-const fruitArr = [firefruit, gomugomu, fruit1, fruit2, fruit3, fruit4, fruit5];
+const fruitArr = [firefruit, gomugomu, fruit2, fruit4, fruit5];
 
 const enemyMoves = [enemyimg1, enemyimg2, enemyimg3, enemyimg4];
 

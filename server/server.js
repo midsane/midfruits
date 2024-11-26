@@ -124,19 +124,22 @@ const fruitsData = {};
 const FRUIT_GENERATION_TIME = 2000;
 const FULL_GAME_TIME = 3 * 60 * 1000;
 
-
 const generateNewFruits = (currentFruits) => {
   let newFruitData = [];
-  console.log("trying to generate new fruits");
+  console.log("Trying to generate new fruits");
   let flag = true;
-  for (let fixedFruit of fixedFruitsData) {
-    flag = true;
-    for (let fruit of currentFruits) {
-      if (fixedFruit.top == fruit.top && fixedFruit.left == fruit.left) {
-        flag = false;
+  try {
+    for (let fixedFruit of fixedFruitsData) {
+      flag = true;
+      for (let fruit of currentFruits) {
+        if (fixedFruit.top == fruit.top && fixedFruit.left == fruit.left) {
+          flag = false;
+        }
       }
+      if (flag) newFruitData.push(fixedFruit);
     }
-    if (flag) newFruitData.push(fixedFruit);
+  } catch (error) {
+    return { status: 500, msg: "currentfruits is null" };
   }
 
   if (newFruitData.length === 0) return -1;
@@ -196,6 +199,15 @@ io.on("connection", (socket) => {
         const intervalId = setInterval(() => {
           const randomFruit = generateNewFruits(fruitsData[roomName]);
           if (randomFruit == -1) return;
+          if (randomFruit.status === 500) {
+            socket.emit("start-game-response", {
+              status: randomFruit.status,
+              msg:
+                randomFruit.msg ||
+                "something went wrong while toggling start game status",
+            });
+            return;
+          }
           switch (randomFruit.categ) {
             case "prime":
               randomFruit.val = generatePrimeNumbers();
@@ -271,8 +283,8 @@ io.on("connection", (socket) => {
       p.playerId === socket.id;
     });
 
-    if(doesPlayersAlreadyExist){
-      console.log('player already exist in the room')
+    if (doesPlayersAlreadyExist) {
+      console.log("player already exist in the room");
       return;
     }
 

@@ -10,22 +10,30 @@
   filter: none;
 }
 
+
+@font-face {
+  font-family: 'pixel-game';
+  src: url('../src/assets/fonts/PixelGame-R9AZe.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .pixelify-sans-title {
-  font-family: "Pixelify Sans", sans-serif;
+  font-family: "pixel-game", sans-serif;
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
 }
 
 .pixelify-sans,body {
-   font-family: "Pixelify Sans", sans-serif;
+   font-family: "pixel-game", sans-serif;
   font-optical-sizing: auto;
-  
+  font-weight: 200;
   font-style: normal;
 }
 
 .title-text span h1{
-  text-shadow:    -1px -1px 0 #000,  
+  text-shadow:-1px -1px 0 #000,  
       1px -1px 0 #000,
       -1px 1px 0 #000,
       1px 1px 0 #000;;
@@ -33,7 +41,7 @@
 }
 
 .title2{
-   text-shadow:    -0.1px -0.1px 0 #000,  
+   text-shadow:-0.1px -0.1px 0 #000,  
       0.1px -0.1px 0 #000,
       -0.1px 0.1px 0 #000,
       0.1px 0.1px 0 #000;;

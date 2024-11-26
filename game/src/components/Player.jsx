@@ -156,9 +156,9 @@ const EachPlayer = ({ player }) => {
   >
     {/* <PlayerBar val={player.healthBar} type="health" />
     <PlayerBar val={player.manaBar} type="mana" /> */}
-    <span className="flex text-sm justify-between w-full h-4" >
+    <span className="flex text-sm justify-between w-full rounded-sm px-1 bg-amber-200 h-4" >
       <p>{(player.playerName.slice(0, 3)) + ".."}</p>
-      <p className="font-bold text-red-600"  >{player.points}</p>
+      <p className="font-md font-thin text-red-600"  >{player.points}</p>
     </span>
 
     <img

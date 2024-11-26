@@ -228,13 +228,13 @@ const StartGamePanel = ({ players }) => {
         exit={{ opacity: 0, y: -20 }}
         className="w-screen h-screen z-10 fixed flex justify-center items-center "
     >
-        <div className="p-10 rounded-md flex flex-col gap-2  fixed top-40  border-2  border-black
+        <div className="p-10 rounded-md flex flex-col gap-2 font-thin  fixed top-40  border-2  border-black
          bg-emerald-400 justify-center items-center text-xl z-50" >
 
             <h1 className="text-3xl text-amber-300 " >Game Rules:</h1>
-            <p>fruits with prime numbers are worth +10 points</p>
-            <p>fruits with even(NOT PRIME) numbers are worth -5 points</p>
-            <p>fruits with odd(NOT PRIME) numbers are worth -3 points</p>
+            <p>fruits with <span className="text-orange-300" >prime</span> numbers are worth +10 points</p>
+            <p>fruits with <span className="text-amber-200">even</span> (NOT PRIME) numbers are worth -5 points</p>
+            <p>fruits with <span className="text-pink-200">odd</span> (NOT PRIME) numbers are worth -3 points</p>
             <GameRoomBtn startGame={startGame} content="Start Game!"
                 onClick={() => {
                     audioRef.current.play()
@@ -281,7 +281,7 @@ const SettingPanel = ({ players }) => {
 
 const LivePoints = ({ p }) => {
     return (
-        <div className="flex bg-amber-300  font-bold justify-between ">
+        <div className="flex bg-amber-300 font-thin justify-between ">
             <p className="rounded-full p-1" >{p.playerName}</p>
             <p className="text-red-500 " >{p.points} pts</p>
         </div>
@@ -298,10 +298,10 @@ const GameRoomBtn = ({ content, onClick, startGame = false, svg = false }) => {
     return (<div
         disabled={startGame}
         onClick={onClick}
-        className={`bg-amber-300 p-2 cursor-pointer flex justify-between
+        className={`bg-amber-300 p-2 rounded-sm text-emerald-900 cursor-pointer flex justify-between 
             ${!startGame ? "active:scale-95 hover:scale-105" : "opacity-70"} w-full `} ><div className="flex items-center justify-center" >
             <p className="text-center" >{content}</p>
-            {svg && <DoorOpen size={40} />}
+            {svg && <DoorOpen size={30} />}
         </div>
     </div>)
 }

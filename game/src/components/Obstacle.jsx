@@ -40,7 +40,9 @@ const Obstacle = ({ obstaclesData }) => {
                 <img
                     className="absolute w-full h-full"
                     src={obstaclesData.img}></img >
-                <p className="absolute text-2xl font-bold left-1/2 translate-x-[-50%] top-1/2 translate-y-[-50%]" >{obstaclesData.val}</p>
+                    <div className="w-fit px-1 h-fit left-1/2 translate-x-[-50%] top-1/2 translate-y-[-50%] absolute rounded-full bg-gradient-to-r to-amber-100 border border-stone-500 from-yellow-300" >
+                        <p className=" text-md" >{obstaclesData.val}</p>
+                </div>
             </div>
             }
         </motion.div>
