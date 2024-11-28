@@ -9,6 +9,7 @@ import { Background } from "../components/Background";
 import { MobileView } from "./mobile";
 import { Music } from "../components/Music"
 import { Toast } from "../components/Toast";
+import { Analytics } from "@vercel/analytics/react";
 export const Root = ({ children }) => {
     const [username, setUsername] = useRecoilState(usernameAtom)
     const navigate = useNavigate()
@@ -85,6 +86,7 @@ export const Root = ({ children }) => {
                         </dialog></motion.div>}
                 </AnimatePresence>
                 <Outlet>{children}</Outlet>
+                <Analytics />
             </Background>
         </div>
 
