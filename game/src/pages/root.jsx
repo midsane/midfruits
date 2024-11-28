@@ -6,6 +6,7 @@ import { Title } from "../components/title";
 import { isRoomInvalidAtom, usernameAtom } from "../store/atoms";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { Background } from "../components/Background";
+import { Analytics } from "@vercel/analytics/next";
 export const Root = ({ children }) => {
     const [username, setUsername] = useRecoilState(usernameAtom)
     const navigate = useNavigate()
@@ -68,6 +69,7 @@ export const Root = ({ children }) => {
                     </dialog></motion.div>}
             </AnimatePresence>
             <Outlet>{children}</Outlet>
+            <Analytics />
     </Background>
 
     );
