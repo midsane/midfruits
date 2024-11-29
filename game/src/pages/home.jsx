@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import { useSocket } from "../hooks/usesocket";
 import { PlayerBar } from "../components/playerBar";
 import { Toast } from "../components/Toast";
-import { v4: uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 
 export const HomePage = () => {
     const [scope, animate] = useAnimate();
