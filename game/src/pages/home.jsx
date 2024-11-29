@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import { useSocket } from "../hooks/usesocket";
 import { PlayerBar } from "../components/playerBar";
 import { Toast } from "../components/Toast";
-
+import { v4: uuidv4 } from 'uuid'
 
 export const HomePage = () => {
     const [scope, animate] = useAnimate();
@@ -171,8 +171,8 @@ const Button = ({ content }) => {
 
     const playSolo = () => {
         setShowLoading(true)
-        const uuid = crypto.randomUUID().substring(0,8)
-        roomnameRef.current = {value: uuid}
+        const randomString = uuidv4();
+        roomnameRef.current = {value: randomString}
         
         handleClickRoomCreation("solo")
     }
