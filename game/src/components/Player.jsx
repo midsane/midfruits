@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useEffect, useRef } from "react";
 
 import {
@@ -20,12 +20,21 @@ const Player = () => {
   const { sendRoomData, deleteFruit } = useSocket()
   const activeRoom = useRecoilValue(activeRoomAtom)
   const playerId = useRecoilValue(socketIdAtom)
-
+  const setFruitsData = useSetRecoilState(fruitsDataAtom)
   const fruitsDataRef = useRef(fruitsData);
 
   const pointsGainSoundRef = useRef()
   const pointsLoseEvenSoundRef = useRef()
   const pointsLoseOddSoundRef = useRef()
+
+  let collisionWithFruitInd = -1;
+  const deleteFruitOnClient = (index) => {
+    setFruitsData(prev => {
+      const newFruitData = prev.filter(f => f.index !== index)
+      collisionWithFruitInd = -1;
+      return newFruitData;
+    })
+  }
 
   useEffect(() => {
     pointsGainSoundRef.current = new Audio("/assets/elizabeth_sound.mp3")
@@ -61,6 +70,7 @@ const Player = () => {
     return false
   }
 
+
   const checkCollisionWithObjects = (currentPlayerState) => {
     const collding = OBSTACLE_POSITION.some(obs => {
       const topDiff = Math.abs(obs.top - currentPlayerState.top);
@@ -73,7 +83,8 @@ const Player = () => {
   }
 
   useEffect(() => {
-
+  
+  
     const inputFnc = (event) => {
       setCurrentPlayer(prev => {
         const currentPlayerState = { ...prev }
@@ -111,15 +122,19 @@ const Player = () => {
 
         if (collisionWithFruit) {
           
-
+          console.log("collided with fruit just now!")
           currentPlayerState.points += collisionWithFruit.worth;
           deleteFruit(activeRoom, collisionWithFruit.index)
+          collisionWithFruitInd = collisionWithFruit.index
+         
         }
 
 
         sendRoomData(currentPlayerState, activeRoom)
         return currentPlayerState
       })
+
+      deleteFruitOnClient(collisionWithFruitInd)
 
 
     };
