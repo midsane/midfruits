@@ -33,7 +33,7 @@ import { DoorOpen, Clock } from "lucide-react"
 
 export default function GamePage() {
     const [players, setPlayers] = useRecoilState(playersAtom)
-    const [currentPlayer, setCurrentPlayer] = useRecoilState(currentPlayerAtom)
+    const setCurrentPlayer = useSetRecoilState(currentPlayerAtom)
     const [username, setUsername] = useRecoilState(usernameAtom)
     const isRoomInvalid = useRecoilValue(isRoomInvalidAtom)
     const navigate = useNavigate()
@@ -76,6 +76,7 @@ export default function GamePage() {
 
         if (usernameRef.current.value === "") {
             setShowToast(true)
+            
             return
         }
         setUsername(usernameRef.current.value)
@@ -93,18 +94,19 @@ export default function GamePage() {
     useEffect(() => {
 
         if (username === "") {
+           
             connectSocket()
             setAskUser(true)
         }
         else if (socketId) {
-
+           
             setAskUser(false)
             setActiveRoom(gameId)
             joinRoom(gameId, username)
 
             checkRoomAvailibility();
 
-            getRoomData(setPlayers, setCurrentPlayer, currentPlayer, doesRoomExist)
+            getRoomData(setPlayers, setCurrentPlayer, doesRoomExist)
 
 
         }

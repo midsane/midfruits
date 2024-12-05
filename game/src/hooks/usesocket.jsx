@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilBridgeAcrossReactRoots_UNSTABLE, useRecoilValue, useSetRecoilState } from "recoil";
 import { io } from "socket.io-client";
-import { activeRoomAtom, fruitsDataAtom, gameHasEndedAtom, isRoomInvalidAtom, playersAtom, socketIdAtom, startGameAtom, timeRemGameAtom } from "../store/atoms";
+import { activeRoomAtom, currentPlayerAtom, fruitsDataAtom, gameHasEndedAtom, isRoomInvalidAtom, playersAtom, socketIdAtom, startGameAtom, timeRemGameAtom } from "../store/atoms";
 import { fruitArr } from "../Data/data";
 
 
@@ -15,6 +15,7 @@ const useSocket = () => {
     const setStartGame = useSetRecoilState(startGameAtom)
     const setTimeRemGame = useSetRecoilState(timeRemGameAtom)
     const setGameHasEnded = useSetRecoilState(gameHasEndedAtom)
+    const currentPlayer = useRecoilValue(currentPlayerAtom)
 
     useEffect(() => {
 
@@ -67,6 +68,7 @@ const useSocket = () => {
         socket.on("delete-fruit-index", index => {
             setFruitsData(prev => {
                 const newFruitData = prev.filter(f => f.index !== index)
+                
                 return newFruitData;
             })
         })
@@ -102,7 +104,7 @@ const useSocket = () => {
         setGameHasEnded(false)
 
     }
-    const getRoomData = (setPlayers, setCurrentPlayer, currentPlayer, setDoesRoomExist) => {
+    const getRoomData = (setPlayers, setCurrentPlayer, setDoesRoomExist) => {
 
         if (socket) {
             socket.on("get-room-data", roomData => {
@@ -118,7 +120,6 @@ const useSocket = () => {
                     const currentPlayerInitial = roomData.participants.filter(({ playerId }) => {
                         return playerId === socket.id
                     })
-
                     setCurrentPlayer(currentPlayerInitial[0])
                 }
 
