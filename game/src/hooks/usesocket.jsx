@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { useRecoilBridgeAcrossReactRoots_UNSTABLE, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { io } from "socket.io-client";
 import { activeRoomAtom, currentPlayerAtom, fruitsDataAtom, gameHasEndedAtom, isRoomInvalidAtom, playersAtom, socketIdAtom, startGameAtom, timeRemGameAtom } from "../store/atoms";
 import { fruitArr } from "../Data/data";
 
-
+let currentPlayerActive = false;
 let socket = null;
 const useSocket = () => {
     const setSocketId = useSetRecoilState(socketIdAtom)
@@ -115,12 +115,14 @@ const useSocket = () => {
                 }
 
                 setPlayers(roomData)
-                if (currentPlayer == null) {
+                
+                if (!currentPlayerActive) {
                     console.log("updating current player")
                     const currentPlayerInitial = roomData.participants.filter(({ playerId }) => {
                         return playerId === socket.id
                     })
                     setCurrentPlayer(currentPlayerInitial[0])
+                    currentPlayerActive = true
                 }
 
 
