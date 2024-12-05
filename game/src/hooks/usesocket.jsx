@@ -115,7 +115,11 @@ const useSocket = () => {
                 }
 
                 setPlayers(roomData)
+<<<<<<< HEAD
                 console.log(currentPlayer)
+=======
+
+>>>>>>> 276f95d1f10bf3fb17a79c7160c32fcd995edef4
                 if (currentPlayer == null) {
                     console.log("updating current player")
                     const currentPlayerInitial = roomData.participants.filter(({ playerId }) => {
