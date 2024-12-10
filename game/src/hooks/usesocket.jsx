@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { io } from "socket.io-client";
-import { activeRoomAtom, currentPlayerAtom, fruitsDataAtom, gameHasEndedAtom, isRoomInvalidAtom, playersAtom, socketIdAtom, startGameAtom, timeRemGameAtom } from "../store/atoms";
+import { activeRoomAtom, fruitsDataAtom, gameHasEndedAtom, isRoomInvalidAtom, playersAtom, socketIdAtom, startGameAtom, timeRemGameAtom } from "../store/atoms";
 import { fruitArr } from "../Data/data";
 
 let currentPlayerActive = false;
@@ -15,7 +15,6 @@ const useSocket = () => {
     const setStartGame = useSetRecoilState(startGameAtom)
     const setTimeRemGame = useSetRecoilState(timeRemGameAtom)
     const setGameHasEnded = useSetRecoilState(gameHasEndedAtom)
-    const currentPlayer = useRecoilValue(currentPlayerAtom)
 
     useEffect(() => {
 

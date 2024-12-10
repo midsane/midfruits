@@ -1,6 +1,10 @@
 import { atom } from "recoil";
 import { img1 } from "../Data/data";
 
+const chagneInScoreAtom = atom({
+  key:"changeInScoreAtom",
+  default: 0
+})
 
 const fruitsDataAtom = atom({
   key: "fruitsDataAtom",
@@ -69,4 +73,5 @@ export {
   startGameAtom,
   timeRemGameAtom,
   gameHasEndedAtom,
+  chagneInScoreAtom
 };

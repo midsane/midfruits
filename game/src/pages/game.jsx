@@ -29,6 +29,7 @@ import { PlayerBar } from "../components/playerBar";
 import { MidFruitLoading } from "../components/Loading";
 import { MobileView } from "./mobile";
 import { DoorOpen, Clock } from "lucide-react"
+import { ChangeInScore } from "../components/changeInscore";
 
 
 export default function GamePage() {
@@ -124,6 +125,7 @@ export default function GamePage() {
         return (<>
             {isSmallScreen ? <MobileView /> :
                 <div>
+                    <ChangeInScore />
                     {!doesRoomExist && <Toast setShowToast={setDoesRoomExist} showToast={doesRoomExist} msg="room does not exist" />}
                     <AnimatePresence>{isRoomInvalid && <motion.div
                         initial={{ opacity: 0 }}

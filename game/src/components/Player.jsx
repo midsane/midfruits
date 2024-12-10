@@ -5,7 +5,7 @@ import {
   OBSTACLE_POSITION,
   playerMoves,
 } from "../Data/data";
-import { activeRoomAtom, currentPlayerAtom, fruitsDataAtom, playersAtom, socketIdAtom } from "../store/atoms";
+import { activeRoomAtom, chagneInScoreAtom, currentPlayerAtom, fruitsDataAtom, playersAtom, socketIdAtom } from "../store/atoms";
 import { useSocket } from "../hooks/usesocket";
 
 const EVEN_POINTS = -5;
@@ -15,7 +15,7 @@ const ODD_POINTS = -3;
 const Player = () => {
   const players = useRecoilValue(playersAtom);
   const fruitsData = useRecoilValue(fruitsDataAtom)
-
+  const setChangeInScore = useSetRecoilState(chagneInScoreAtom);
   const [currentPlayer, setCurrentPlayer] = useRecoilState(currentPlayerAtom)
   const { sendRoomData, deleteFruit } = useSocket()
   const activeRoom = useRecoilValue(activeRoomAtom)
@@ -84,7 +84,7 @@ const Player = () => {
 
   useEffect(() => {
   
-  
+    let collisionWithFruit = null;
     const inputFnc = (event) => {
       setCurrentPlayer(prev => {
         const currentPlayerState = { ...prev }
@@ -118,11 +118,10 @@ const Player = () => {
           return prev
         }
 
-        const collisionWithFruit = checkCollisionWithFruits(currentPlayerState)
+         collisionWithFruit = checkCollisionWithFruits(currentPlayerState)
 
         if (collisionWithFruit) {
-          
-          console.log("collided with fruit just now!")
+  
           currentPlayerState.points += collisionWithFruit.worth;
           deleteFruit(activeRoom, collisionWithFruit.index)
           collisionWithFruitInd = collisionWithFruit.index
@@ -135,6 +134,8 @@ const Player = () => {
       })
 
       deleteFruitOnClient(collisionWithFruitInd)
+      if(collisionWithFruit)
+      setChangeInScore(collisionWithFruit.worth);
 
 
     };
