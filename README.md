@@ -16,8 +16,8 @@
 
 ## 🛠 Tech Stack
 
-- **Frontend:** Deployed on [Vercel](https://vercel.com).
-- **Backend:** Deployed on [Render](https://render.com).
+- **Frontend:** React.js, Recoil Deployed on [Vercel](https://vercel.com).
+- **Backend:** Nodejs Deployed on [Render](https://render.com).
 - **WebSocket Communication:** Implemented using **Socket.IO**.
 - **State Management:** Handled via **Recoil**.
 
